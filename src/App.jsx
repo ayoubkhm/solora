@@ -31,8 +31,9 @@ function viewFromHash(hash) {
   return HASH_TO_VIEW[hash] || 'home'
 }
 
-// Image hébergée localement (public/) pour ne pas dépendre d'une URL éphémère.
-const HERO_IMG = '/hero-house.png'
+// Image hébergée localement (public/) ; BASE_URL gère le sous-chemin en prod (/solora/).
+const HERO_IMG = `${import.meta.env.BASE_URL}hero-house.png`
+const HERO_VIDEO = `${import.meta.env.BASE_URL}hero.mp4`
 
 // Adresse de démonstration (coordonnées en dur, toit couvert par la Solar API vérifié) :
 // permet de lancer une analyse en un clic, sans géocodage — fiable pour une démo live.
@@ -424,7 +425,7 @@ function Landing({ onSelect, onError, globalError, onExample, searchRef }) {
           poster={HERO_IMG}
           aria-hidden="true"
         >
-          <source src="/hero.mp4" type="video/mp4" />
+          <source src={HERO_VIDEO} type="video/mp4" />
         </video>
         {/* Dégradé pour garder le texte lisible par-dessus la vidéo */}
         <div className="absolute inset-0 bg-gradient-to-b from-background/90 via-background/80 to-background/92" />
