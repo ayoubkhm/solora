@@ -1,0 +1,293 @@
+<!DOCTYPE html>
+
+<html class="light" lang="fr"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Le contexte énergétique - Solar Insights</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    "colors": {
+                        "inverse-surface": "#213145",
+                        "secondary": "#006e1c",
+                        "on-primary": "#ffffff",
+                        "secondary-fixed-dim": "#78dc77",
+                        "surface-dim": "#cbdbf5",
+                        "on-tertiary-fixed": "#111c2d",
+                        "error": "#ba1a1a",
+                        "on-primary-fixed-variant": "#544600",
+                        "tertiary-fixed-dim": "#bcc7de",
+                        "surface-variant": "#d3e4fe",
+                        "background": "#f8f9ff",
+                        "secondary-container": "#91f78e",
+                        "secondary-fixed": "#94f990",
+                        "on-error": "#ffffff",
+                        "on-surface": "#0b1c30",
+                        "on-primary-container": "#705e00",
+                        "on-secondary-fixed-variant": "#005313",
+                        "on-secondary-fixed": "#002204",
+                        "surface-container": "#e5eeff",
+                        "outline": "#7e775f",
+                        "on-error-container": "#93000a",
+                        "surface-tint": "#705d00",
+                        "primary": "#705d00",
+                        "inverse-primary": "#e9c400",
+                        "outline-variant": "#d0c6ab",
+                        "inverse-on-surface": "#eaf1ff",
+                        "surface-container-lowest": "#ffffff",
+                        "surface-bright": "#f8f9ff",
+                        "on-secondary": "#ffffff",
+                        "tertiary-container": "#cfdaf2",
+                        "on-primary-fixed": "#221b00",
+                        "on-tertiary-container": "#545f74",
+                        "on-tertiary": "#ffffff",
+                        "tertiary-fixed": "#d8e3fb",
+                        "surface-container-low": "#eff4ff",
+                        "on-surface-variant": "#4d4732",
+                        "tertiary": "#545f73",
+                        "primary-fixed-dim": "#e9c400",
+                        "on-background": "#0b1c30",
+                        "surface-container-highest": "#d3e4fe",
+                        "primary-fixed": "#ffe16d",
+                        "on-tertiary-fixed-variant": "#3c475a",
+                        "primary-container": "#ffd700",
+                        "error-container": "#ffdad6",
+                        "surface": "#f8f9ff",
+                        "surface-container-high": "#dce9ff",
+                        "on-secondary-container": "#00731e"
+                    },
+                    "borderRadius": {
+                        "DEFAULT": "0.25rem",
+                        "lg": "0.5rem",
+                        "xl": "0.75rem",
+                        "full": "9999px"
+                    },
+                    "spacing": {
+                        "base": "8px",
+                        "margin-desktop": "40px",
+                        "gutter": "24px",
+                        "container-max": "1280px",
+                        "margin-mobile": "16px"
+                    },
+                    "fontFamily": {
+                        "label-md": ["Inter", "sans-serif"],
+                        "headline-md": ["Montserrat", "sans-serif"],
+                        "label-sm": ["Inter", "sans-serif"],
+                        "body-sm": ["Inter", "sans-serif"],
+                        "body-md": ["Inter", "sans-serif"],
+                        "body-lg": ["Inter", "sans-serif"],
+                        "headline-lg": ["Montserrat", "sans-serif"],
+                        "headline-lg-mobile": ["Montserrat", "sans-serif"],
+                        "headline-xl": ["Montserrat", "sans-serif"]
+                    },
+                    "fontSize": {
+                        "label-md": ["14px", { "lineHeight": "16px", "letterSpacing": "0.02em", "fontWeight": "600" }],
+                        "headline-md": ["24px", { "lineHeight": "32px", "fontWeight": "600" }],
+                        "label-sm": ["12px", { "lineHeight": "16px", "fontWeight": "500" }],
+                        "body-sm": ["14px", { "lineHeight": "20px", "fontWeight": "400" }],
+                        "body-md": ["16px", { "lineHeight": "24px", "fontWeight": "400" }],
+                        "body-lg": ["18px", { "lineHeight": "28px", "fontWeight": "400" }],
+                        "headline-lg": ["32px", { "lineHeight": "40px", "letterSpacing": "-0.01em", "fontWeight": "700" }],
+                        "headline-lg-mobile": ["24px", { "lineHeight": "32px", "fontWeight": "700" }],
+                        "headline-xl": ["48px", { "lineHeight": "56px", "letterSpacing": "-0.02em", "fontWeight": "700" }]
+                    }
+                }
+            }
+        }
+    </script>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&amp;family=Montserrat:wght@600;700&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<style>
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+        }
+        .chart-donut {
+            background: conic-gradient(
+                #006e1c 0% 25%,   /* Renouvelable (Secondary) */
+                #705d00 25% 40%,  /* Fossile (Primary) */
+                #545f73 40% 100%  /* Nucléaire (Tertiary) */
+            );
+            border-radius: 50%;
+        }
+        .chart-inner-circle {
+            background-color: #ffffff;
+            border-radius: 50%;
+        }
+    </style>
+</head>
+<body class="bg-background text-on-background font-body-md min-h-screen flex flex-col">
+<!-- TopNavBar -->
+<nav class="bg-surface dark:bg-inverse-surface shadow-sm sticky top-0 z-50">
+<div class="flex justify-between items-center w-full px-margin-mobile md:px-margin-desktop max-w-container-max mx-auto h-20">
+<!-- Brand -->
+<a class="font-headline-md text-headline-md font-bold text-on-surface dark:text-inverse-on-surface flex items-center gap-2" href="#">
+<span class="material-symbols-outlined text-primary" style="font-variation-settings: 'FILL' 1;">solar_power</span>
+                Solar Insights
+            </a>
+<!-- Navigation Links (Desktop) -->
+<div class="hidden md:flex items-center gap-6">
+<a class="text-on-surface-variant dark:text-surface-variant font-label-md text-label-md hover:text-primary dark:hover:text-inverse-primary transition-colors" href="#">Analysis</a>
+<a class="text-on-surface-variant dark:text-surface-variant font-label-md text-label-md hover:text-primary dark:hover:text-inverse-primary transition-colors" href="#">Dashboard</a>
+<a class="text-primary dark:text-inverse-primary font-label-md text-label-md border-b-2 border-primary dark:border-inverse-primary pb-1" href="#">EU Context</a>
+<a class="text-on-surface-variant dark:text-surface-variant font-label-md text-label-md hover:text-primary dark:hover:text-inverse-primary transition-colors" href="#">About</a>
+</div>
+<!-- Actions -->
+<div class="flex items-center gap-4">
+<button class="text-on-surface-variant hover:text-primary transition-colors">
+<span class="material-symbols-outlined">search</span>
+</button>
+<button class="bg-primary text-on-primary font-label-md text-label-md px-4 py-2 rounded-full scale-95 active:scale-90 transition-transform duration-200 shadow-sm hover:shadow-md">
+                    Find My Roof
+                </button>
+</div>
+</div>
+</nav>
+<!-- Main Content -->
+<main class="flex-grow w-full px-margin-mobile md:px-margin-desktop max-w-container-max mx-auto py-12">
+<!-- Header Section -->
+<header class="mb-12">
+<h1 class="font-headline-lg-mobile md:font-headline-lg text-headline-lg-mobile md:text-headline-lg text-on-surface mb-4">Le contexte énergétique en France</h1>
+<p class="font-body-lg text-body-lg text-on-surface-variant max-w-3xl">
+                Comprendre la dynamique énergétique nationale est essentiel. Ces données, issues d'Eurostat, illustrent les défis actuels et la nécessité d'une transition rapide vers des sources renouvelables locales, comme l'énergie solaire résidentielle.
+            </p>
+</header>
+<!-- Bento Grid Layout -->
+<div class="grid grid-cols-1 md:grid-cols-12 gap-gutter">
+<!-- Mix Électrique Actuel (Donut Chart) -->
+<div class="md:col-span-4 bg-surface-container-lowest rounded-xl shadow-[0_2px_8px_rgba(84,95,115,0.04)] p-6 border border-outline-variant/30 flex flex-col items-center justify-center">
+<h2 class="font-headline-md text-headline-md text-on-surface w-full text-left mb-6">Mix électrique actuel</h2>
+<div class="relative w-48 h-48 mb-6">
+<div class="absolute inset-0 chart-donut shadow-inner"></div>
+<div class="absolute inset-[15%] chart-inner-circle shadow-sm flex items-center justify-center">
+<div class="text-center">
+<span class="block font-headline-md text-headline-md text-on-surface">25%</span>
+<span class="block font-label-sm text-label-sm text-on-surface-variant">Renouvelable</span>
+</div>
+</div>
+</div>
+<div class="w-full space-y-3">
+<div class="flex items-center justify-between">
+<div class="flex items-center gap-2">
+<div class="w-3 h-3 rounded-full bg-secondary"></div>
+<span class="font-body-sm text-body-sm text-on-surface">Renouvelable</span>
+</div>
+<span class="font-label-sm text-label-sm font-bold">25%</span>
+</div>
+<div class="flex items-center justify-between">
+<div class="flex items-center gap-2">
+<div class="w-3 h-3 rounded-full bg-primary"></div>
+<span class="font-body-sm text-body-sm text-on-surface">Fossile</span>
+</div>
+<span class="font-label-sm text-label-sm font-bold">15%</span>
+</div>
+<div class="flex items-center justify-between">
+<div class="flex items-center gap-2">
+<div class="w-3 h-3 rounded-full bg-tertiary"></div>
+<span class="font-body-sm text-body-sm text-on-surface">Nucléaire</span>
+</div>
+<span class="font-label-sm text-label-sm font-bold">60%</span>
+</div>
+</div>
+</div>
+<!-- Évolution des Prix (Line Chart Simulation) -->
+<div class="md:col-span-8 bg-surface-container-lowest rounded-xl shadow-[0_2px_8px_rgba(84,95,115,0.04)] p-6 border border-outline-variant/30 flex flex-col">
+<div class="flex justify-between items-start mb-6">
+<div>
+<h2 class="font-headline-md text-headline-md text-on-surface">Évolution du prix de l'électricité</h2>
+<p class="font-body-sm text-body-sm text-on-surface-variant">Sur les 5 dernières années (Centimes d'€ / kWh)</p>
+</div>
+<span class="material-symbols-outlined text-primary bg-primary-container p-2 rounded-full">trending_up</span>
+</div>
+<!-- SVG Line Chart Mockup -->
+<div class="flex-grow w-full relative min-h-[200px] bg-surface-bright rounded-lg overflow-hidden border border-outline-variant/20">
+<svg class="w-full h-full absolute inset-0" preserveaspectratio="none" viewbox="0 0 800 200">
+<!-- Grid lines -->
+<line stroke="#d3e4fe" stroke-dasharray="4" stroke-width="1" x1="0" x2="800" y1="50" y2="50"></line>
+<line stroke="#d3e4fe" stroke-dasharray="4" stroke-width="1" x1="0" x2="800" y1="100" y2="100"></line>
+<line stroke="#d3e4fe" stroke-dasharray="4" stroke-width="1" x1="0" x2="800" y1="150" y2="150"></line>
+<!-- Line -->
+<path d="M 0 180 Q 100 170, 200 160 T 400 120 T 600 70 T 800 30" fill="none" stroke="#705d00" stroke-width="3"></path>
+<!-- Area -->
+<path d="M 0 180 Q 100 170, 200 160 T 400 120 T 600 70 T 800 30 L 800 200 L 0 200 Z" fill="url(#gradient)" opacity="0.2"></path>
+<defs>
+<lineargradient id="gradient" x1="0" x2="0" y1="0" y2="1">
+<stop offset="0%" stop-color="#ffd700"></stop>
+<stop offset="100%" stop-color="#f8f9ff"></stop>
+</lineargradient>
+</defs>
+<!-- Data points -->
+<circle class="hover:r-6 transition-all cursor-pointer" cx="200" cy="160" fill="#705d00" r="4"></circle>
+<circle class="hover:r-6 transition-all cursor-pointer" cx="400" cy="120" fill="#705d00" r="4"></circle>
+<circle class="hover:r-6 transition-all cursor-pointer" cx="600" cy="70" fill="#705d00" r="4"></circle>
+<circle class="hover:r-6 transition-all cursor-pointer" cx="800" cy="30" fill="#705d00" r="4"></circle>
+</svg>
+<!-- X Axis Labels -->
+<div class="absolute bottom-2 left-0 right-0 flex justify-between px-4 font-label-sm text-label-sm text-on-surface-variant">
+<span>2019</span>
+<span>2020</span>
+<span>2021</span>
+<span>2022</span>
+<span>2023</span>
+</div>
+</div>
+</div>
+<!-- Objectif 2030 (Progress Bar) & Info Text -->
+<div class="md:col-span-12 bg-surface-container-low rounded-xl p-8 border border-outline-variant/30 flex flex-col md:flex-row gap-8 items-center">
+<div class="flex-1 w-full">
+<h2 class="font-headline-md text-headline-md text-on-surface mb-2">Objectif Européen 2030</h2>
+<p class="font-body-sm text-body-sm text-on-surface-variant mb-6">Part d'énergies renouvelables visée dans la consommation finale brute d'énergie.</p>
+<div class="relative w-full h-6 bg-surface-variant rounded-full overflow-hidden mb-2 shadow-inner">
+<div class="absolute top-0 left-0 h-full bg-secondary transition-all duration-1000 ease-out" style="width: 25%;"></div>
+<div class="absolute top-0 left-0 h-full w-full flex justify-between px-4 items-center font-label-sm text-label-sm text-on-surface z-10 pointer-events-none">
+<span class="text-on-primary drop-shadow-md">État actuel (25%)</span>
+<span class="text-on-surface-variant font-bold">Objectif (42.5%)</span>
+</div>
+<!-- Target Marker -->
+<div class="absolute top-0 bottom-0 w-1 bg-primary z-20" style="left: 42.5%;"></div>
+</div>
+<div class="flex justify-end w-full">
+<span class="font-label-sm text-label-sm text-on-surface-variant flex items-center gap-1">
+<span class="material-symbols-outlined text-[16px]">flag</span> Cible 2030
+                        </span>
+</div>
+</div>
+<div class="w-px h-full min-h-[100px] bg-outline-variant hidden md:block"></div>
+<div class="flex-1">
+<div class="flex items-start gap-4">
+<div class="bg-secondary-container text-on-secondary-container p-3 rounded-full flex-shrink-0">
+<span class="material-symbols-outlined">wb_sunny</span>
+</div>
+<div>
+<h3 class="font-label-md text-label-md text-on-surface mb-2">Votre rôle est crucial</h3>
+<p class="font-body-sm text-body-sm text-on-surface-variant">
+                                Pour atteindre l'objectif européen de 42,5% d'énergies renouvelables d'ici 2030, la production décentralisée est indispensable. En installant des panneaux solaires, vous réduisez non seulement votre exposition à la volatilité des prix du marché, mais vous augmentez directement la part d'énergie verte nationale. Chaque toiture compte dans cette transition collective.
+                            </p>
+</div>
+</div>
+</div>
+</div>
+</div>
+</main>
+<!-- Footer -->
+<footer class="bg-surface-container-low dark:bg-inverse-surface border-t border-outline-variant dark:border-outline mt-auto">
+<div class="w-full py-12 px-margin-mobile md:px-margin-desktop flex flex-col md:flex-row justify-between items-center max-w-container-max mx-auto gap-6">
+<div class="font-label-sm text-label-sm text-on-surface-variant dark:text-surface-variant opacity-80">
+                © 2024 Solar Insights. Data powered by Eurostat.
+            </div>
+<div class="flex flex-wrap justify-center gap-6">
+<a class="font-label-sm text-label-sm text-on-surface-variant dark:text-surface-variant hover:text-secondary dark:hover:text-secondary-fixed transition-colors opacity-80 hover:opacity-100" href="#">Privacy Policy</a>
+<a class="font-label-sm text-label-sm text-on-surface-variant dark:text-surface-variant hover:text-secondary dark:hover:text-secondary-fixed transition-colors opacity-80 hover:opacity-100" href="#">Terms of Service</a>
+<a class="font-label-sm text-label-sm text-on-surface-variant dark:text-surface-variant hover:text-secondary dark:hover:text-secondary-fixed transition-colors opacity-80 hover:opacity-100" href="#">EU Climate Pact</a>
+<a class="font-label-sm text-label-sm text-on-surface-variant dark:text-surface-variant hover:text-secondary dark:hover:text-secondary-fixed transition-colors opacity-80 hover:opacity-100" href="#">Methodology</a>
+</div>
+<!-- Hidden Logo per JSON mapping, but keeping semantic structure -->
+<div class="hidden">
+<span class="font-headline-md text-headline-md font-bold text-on-surface dark:text-inverse-on-surface">Solar Insights</span>
+</div>
+</div>
+</footer>
+</body></html>

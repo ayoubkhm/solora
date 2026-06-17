@@ -1,0 +1,29 @@
+{
+  "name": "solora",
+  "private": true,
+  "version": "1.0.0",
+  "type": "module",
+  "description": "Solora — estimez le potentiel solaire de n'importe quel toit en Europe",
+  "scripts": {
+    "dev": "vite",
+    "build": "vite build",
+    "preview": "vite preview"
+  },
+  "dependencies": {
+    "geotiff": "^3.0.5",
+    "geotiff-geokeys-to-proj4": "^2024.4.13",
+    "proj4": "^2.20.9",
+    "react": "^18.3.1",
+    "react-dom": "^18.3.1"
+  },
+  "devDependencies": {
+    "@tailwindcss/container-queries": "^0.1.1",
+    "@tailwindcss/forms": "^0.5.11",
+    "@vitejs/plugin-react": "^4.3.4",
+    "autoprefixer": "^10.5.0",
+    "playwright": "^1.61.0",
+    "postcss": "^8.5.15",
+    "tailwindcss": "^3.4.19",
+    "vite": "^5.4.11"
+  }
+}

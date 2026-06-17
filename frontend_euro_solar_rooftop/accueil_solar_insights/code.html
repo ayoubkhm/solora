@@ -1,0 +1,274 @@
+<!DOCTYPE html>
+
+<html class="light" lang="fr"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Solar Insights | Le futur de votre énergie commence sur votre toit</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&amp;family=Montserrat:wght@600;700&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    colors: {
+                        "inverse-surface": "#213145",
+                        "secondary": "#006e1c",
+                        "on-primary": "#ffffff",
+                        "secondary-fixed-dim": "#78dc77",
+                        "surface-dim": "#cbdbf5",
+                        "on-tertiary-fixed": "#111c2d",
+                        "error": "#ba1a1a",
+                        "on-primary-fixed-variant": "#544600",
+                        "tertiary-fixed-dim": "#bcc7de",
+                        "surface-variant": "#d3e4fe",
+                        "background": "#f8f9ff",
+                        "secondary-container": "#91f78e",
+                        "secondary-fixed": "#94f990",
+                        "on-error": "#ffffff",
+                        "on-surface": "#0b1c30",
+                        "on-primary-container": "#705e00",
+                        "on-secondary-fixed-variant": "#005313",
+                        "on-secondary-fixed": "#002204",
+                        "surface-container": "#e5eeff",
+                        "outline": "#7e775f",
+                        "on-error-container": "#93000a",
+                        "surface-tint": "#705d00",
+                        "primary": "#705d00",
+                        "inverse-primary": "#e9c400",
+                        "outline-variant": "#d0c6ab",
+                        "inverse-on-surface": "#eaf1ff",
+                        "surface-container-lowest": "#ffffff",
+                        "surface-bright": "#f8f9ff",
+                        "on-secondary": "#ffffff",
+                        "tertiary-container": "#cfdaf2",
+                        "on-primary-fixed": "#221b00",
+                        "on-tertiary-container": "#545f74",
+                        "on-tertiary": "#ffffff",
+                        "tertiary-fixed": "#d8e3fb",
+                        "surface-container-low": "#eff4ff",
+                        "on-surface-variant": "#4d4732",
+                        "tertiary": "#545f73",
+                        "primary-fixed-dim": "#e9c400",
+                        "on-background": "#0b1c30",
+                        "surface-container-highest": "#d3e4fe",
+                        "primary-fixed": "#ffe16d",
+                        "on-tertiary-fixed-variant": "#3c475a",
+                        "primary-container": "#ffd700",
+                        "error-container": "#ffdad6",
+                        "surface": "#f8f9ff",
+                        "surface-container-high": "#dce9ff",
+                        "on-secondary-container": "#00731e"
+                    },
+                    borderRadius: {
+                        DEFAULT: "0.25rem",
+                        lg: "0.5rem",
+                        xl: "0.75rem",
+                        full: "9999px",
+                        "2xl": "1rem"
+                    },
+                    spacing: {
+                        base: "8px",
+                        "margin-desktop": "40px",
+                        gutter: "24px",
+                        "container-max": "1280px",
+                        "margin-mobile": "16px"
+                    },
+                    fontFamily: {
+                        "label-md": ["Inter"],
+                        "headline-md": ["Montserrat"],
+                        "label-sm": ["Inter"],
+                        "body-sm": ["Inter"],
+                        "body-md": ["Inter"],
+                        "body-lg": ["Inter"],
+                        "headline-lg": ["Montserrat"],
+                        "headline-lg-mobile": ["Montserrat"],
+                        "headline-xl": ["Montserrat"]
+                    },
+                    fontSize: {
+                        "label-md": ["14px", { lineHeight: "16px", letterSpacing: "0.02em", fontWeight: "600" }],
+                        "headline-md": ["24px", { lineHeight: "32px", fontWeight: "600" }],
+                        "label-sm": ["12px", { lineHeight: "16px", fontWeight: "500" }],
+                        "body-sm": ["14px", { lineHeight: "20px", fontWeight: "400" }],
+                        "body-md": ["16px", { lineHeight: "24px", fontWeight: "400" }],
+                        "body-lg": ["18px", { lineHeight: "28px", fontWeight: "400" }],
+                        "headline-lg": ["32px", { lineHeight: "40px", letterSpacing: "-0.01em", fontWeight: "700" }],
+                        "headline-lg-mobile": ["24px", { lineHeight: "32px", fontWeight: "700" }],
+                        "headline-xl": ["48px", { lineHeight: "56px", letterSpacing: "-0.02em", fontWeight: "700" }]
+                    }
+                }
+            }
+        }
+    </script>
+</head>
+<body class="bg-background text-on-background font-body-md antialiased min-h-screen flex flex-col">
+<!-- TopNavBar Component -->
+<header class="bg-surface dark:bg-inverse-surface w-full z-50 sticky top-0 shadow-sm dark:shadow-none">
+<div class="flex justify-between items-center w-full px-margin-mobile md:px-margin-desktop max-w-container-max mx-auto h-20">
+<!-- Brand Logo -->
+<a class="font-headline-md text-headline-md font-bold text-on-surface dark:text-inverse-on-surface" href="#">
+                Solar Insights
+            </a>
+<!-- Navigation Links (Hidden on Mobile) -->
+<nav class="hidden md:flex space-x-8 items-center h-full">
+<a class="font-label-md text-label-md text-on-surface-variant dark:text-surface-variant hover:text-primary dark:hover:text-inverse-primary transition-colors flex items-center h-full" href="#">
+                    Analysis
+                </a>
+<a class="font-label-md text-label-md text-on-surface-variant dark:text-surface-variant hover:text-primary dark:hover:text-inverse-primary transition-colors flex items-center h-full" href="#">
+                    Dashboard
+                </a>
+<a class="font-label-md text-label-md text-on-surface-variant dark:text-surface-variant hover:text-primary dark:hover:text-inverse-primary transition-colors flex items-center h-full" href="#">
+                    EU Context
+                </a>
+<a class="font-label-md text-label-md text-on-surface-variant dark:text-surface-variant hover:text-primary dark:hover:text-inverse-primary transition-colors flex items-center h-full" href="#">
+                    About
+                </a>
+</nav>
+<!-- Trailing Action -->
+<div class="flex items-center">
+<button class="font-label-md text-label-md bg-primary-container text-on-primary-container px-6 py-3 rounded-full hover:bg-primary hover:text-on-primary transition-colors duration-200 scale-95 active:scale-90">
+                    Find My Roof
+                </button>
+</div>
+</div>
+</header>
+<!-- Main Content Canvas -->
+<main class="flex-grow flex flex-col w-full">
+<!-- Hero Section -->
+<section class="relative w-full min-h-[819px] flex items-center justify-center px-margin-mobile md:px-margin-desktop py-20 bg-surface-container-highest overflow-hidden" data-alt="A stunning, highly detailed photograph of a modern, eco-friendly suburban house featuring a sleek roof entirely integrated with state-of-the-art solar panels. The scene is bathed in warm, optimistic morning sunlight under a clear blue sky, casting soft shadows on manicured green lawns. The overall aesthetic is clean, sustainable, and forward-looking, perfectly matching a professional SaaS platform with slate blue and vibrant energy-inspired accents." style="background-image: linear-gradient(to right, rgba(248, 249, 255, 0.95), rgba(248, 249, 255, 0.7)), url('https://lh3.googleusercontent.com/aida-public/AB6AXuBUsoLiGhn7nRjX-J5yzDKYq-cibYSFk-iWFkVMynKaJiTsrBUAUZnKU09GiDn0hbudSm9cxJ6pI0Yt5M6udVAtahJNweL3boJ1GKZLbC6Oz84lY1bkkOGyq6ICWUjRCUGoOl855tKS-N5FG93qfaeS2nms3_In9k3VlcwvjsYXmE0SBHrFnEnIiV8JZgt3ciTnGUHAJeYkU_Imgkq-8WDs2U-ESNixqyYPBIZdVJZboHduLU0KFL-MakAk6Cj6AKmmR0XkeaiNcdT4'); background-size: cover; background-position: center;">
+<div class="relative z-10 max-w-4xl mx-auto text-center flex flex-col items-center gap-8">
+<!-- Headers -->
+<div class="space-y-4">
+<h1 class="font-headline-lg-mobile text-headline-lg-mobile md:font-headline-xl md:text-headline-xl text-on-surface">
+                        Le futur de votre énergie commence sur votre toit.
+                    </h1>
+<p class="font-body-lg text-body-lg text-on-surface-variant max-w-2xl mx-auto">
+                        Entrez votre adresse en Europe et découvrez votre potentiel solaire en quelques secondes.
+                    </p>
+</div>
+<!-- Prominent Search Bar (Level 2 Elevation) -->
+<div class="w-full max-w-2xl bg-surface rounded-2xl p-2 flex items-center shadow-[0_4px_16px_rgba(84,95,115,0.08)] border border-outline-variant/30">
+<span class="material-symbols-outlined text-on-surface-variant pl-4" style="font-variation-settings: 'FILL' 0;">
+                        search
+                    </span>
+<input class="flex-grow bg-transparent border-none focus:ring-0 font-body-md text-on-surface placeholder:text-on-surface-variant/50 px-4 py-3 outline-none" placeholder="Entrez votre adresse (ex: 12 Rue de la Paix, Paris)" type="text"/>
+<button class="bg-primary text-on-primary font-label-md text-label-md px-8 py-3 rounded-[0.75rem] hover:bg-primary/90 transition-colors duration-200">
+                        Calculer
+                    </button>
+</div>
+<!-- Trust/Chips -->
+<div class="flex gap-4 items-center justify-center mt-4">
+<span class="flex items-center gap-2 bg-secondary-container text-on-secondary-container px-4 py-1.5 rounded-full font-label-sm text-label-sm">
+<span class="material-symbols-outlined text-[16px]" style="font-variation-settings: 'FILL' 1;">eco</span>
+                        Données Eurostat
+                    </span>
+<span class="flex items-center gap-2 bg-tertiary-container text-on-tertiary-container px-4 py-1.5 rounded-full font-label-sm text-label-sm">
+<span class="material-symbols-outlined text-[16px]" style="font-variation-settings: 'FILL' 1;">bolt</span>
+                        Haute Précision
+                    </span>
+</div>
+</div>
+</section>
+<!-- How It Works Section (Bento Grid Style) -->
+<section class="w-full max-w-container-max mx-auto px-margin-mobile md:px-margin-desktop py-24 flex flex-col gap-12">
+<div class="text-center max-w-2xl mx-auto space-y-4">
+<h2 class="font-headline-lg-mobile text-headline-lg-mobile md:font-headline-lg md:text-headline-lg text-on-surface">
+                    Comment ça marche ?
+                </h2>
+<p class="font-body-md text-body-md text-on-surface-variant">
+                    Une analyse scientifique simplifiée en trois étapes clés pour révéler le véritable potentiel énergétique de votre toiture.
+                </p>
+</div>
+<div class="grid grid-cols-1 md:grid-cols-3 gap-gutter">
+<!-- Step 1 Card -->
+<div class="bg-surface rounded-2xl p-8 flex flex-col gap-6 shadow-[0_2px_8px_rgba(84,95,115,0.04)] border border-outline-variant/20 hover:shadow-[0_8px_24px_rgba(84,95,115,0.08)] transition-shadow duration-300">
+<div class="w-12 h-12 bg-primary-container text-on-primary-container rounded-full flex items-center justify-center font-headline-md text-headline-md">
+                        1
+                    </div>
+<div>
+<h3 class="font-headline-md text-headline-md text-on-surface mb-2">
+                            Localisez votre toit
+                        </h3>
+<p class="font-body-md text-body-md text-on-surface-variant">
+                            Notre algorithme utilise des données satellites haute résolution pour identifier votre propriété et modéliser sa surface disponible.
+                        </p>
+</div>
+<div class="mt-auto pt-6 flex justify-end">
+<span class="material-symbols-outlined text-primary text-[32px]" style="font-variation-settings: 'FILL' 0;">
+                            location_on
+                        </span>
+</div>
+</div>
+<!-- Step 2 Card -->
+<div class="bg-surface rounded-2xl p-8 flex flex-col gap-6 shadow-[0_2px_8px_rgba(84,95,115,0.04)] border border-outline-variant/20 hover:shadow-[0_8px_24px_rgba(84,95,115,0.08)] transition-shadow duration-300 transform md:-translate-y-4">
+<div class="w-12 h-12 bg-secondary-container text-on-secondary-container rounded-full flex items-center justify-center font-headline-md text-headline-md">
+                        2
+                    </div>
+<div>
+<h3 class="font-headline-md text-headline-md text-on-surface mb-2">
+                            Simulez l'installation
+                        </h3>
+<p class="font-body-md text-body-md text-on-surface-variant">
+                            Calculez instantanément la production estimée, en tenant compte de l'ensoleillement historique, de l'inclinaison et de l'orientation.
+                        </p>
+</div>
+<div class="mt-auto pt-6 flex justify-end">
+<span class="material-symbols-outlined text-secondary text-[32px]" style="font-variation-settings: 'FILL' 0;">
+                            solar_power
+                        </span>
+</div>
+</div>
+<!-- Step 3 Card -->
+<div class="bg-surface rounded-2xl p-8 flex flex-col gap-6 shadow-[0_2px_8px_rgba(84,95,115,0.04)] border border-outline-variant/20 hover:shadow-[0_8px_24px_rgba(84,95,115,0.08)] transition-shadow duration-300">
+<div class="w-12 h-12 bg-tertiary-container text-on-tertiary-container rounded-full flex items-center justify-center font-headline-md text-headline-md">
+                        3
+                    </div>
+<div>
+<h3 class="font-headline-md text-headline-md text-on-surface mb-2">
+                            Économisez durablement
+                        </h3>
+<p class="font-body-md text-body-md text-on-surface-variant">
+                            Visualisez votre retour sur investissement, les aides financières disponibles et votre impact direct sur la réduction carbone.
+                        </p>
+</div>
+<div class="mt-auto pt-6 flex justify-end">
+<span class="material-symbols-outlined text-tertiary text-[32px]" style="font-variation-settings: 'FILL' 0;">
+                            query_stats
+                        </span>
+</div>
+</div>
+</div>
+</section>
+</main>
+<!-- Footer Component -->
+<footer class="bg-surface-container-low dark:bg-inverse-surface w-full mt-auto border-t border-outline-variant dark:border-outline">
+<div class="w-full py-12 px-margin-mobile md:px-margin-desktop flex flex-col md:flex-row justify-between items-center max-w-container-max mx-auto gap-8 md:gap-0">
+<!-- Brand & Copyright -->
+<div class="flex flex-col items-center md:items-start gap-2">
+<span class="font-headline-md text-headline-md font-bold text-on-surface dark:text-inverse-on-surface">
+                    Solar Insights
+                </span>
+<span class="font-body-sm text-body-sm text-on-surface-variant dark:text-surface-variant">
+                    © 2024 Solar Insights. Data powered by Eurostat.
+                </span>
+</div>
+<!-- Links -->
+<nav class="flex flex-wrap justify-center gap-6">
+<a class="font-label-sm text-label-sm text-on-surface-variant dark:text-surface-variant hover:text-secondary dark:hover:text-secondary-fixed opacity-80 hover:opacity-100 transition-colors" href="#">
+                    Privacy Policy
+                </a>
+<a class="font-label-sm text-label-sm text-on-surface-variant dark:text-surface-variant hover:text-secondary dark:hover:text-secondary-fixed opacity-80 hover:opacity-100 transition-colors" href="#">
+                    Terms of Service
+                </a>
+<a class="font-label-sm text-label-sm text-on-surface-variant dark:text-surface-variant hover:text-secondary dark:hover:text-secondary-fixed opacity-80 hover:opacity-100 transition-colors" href="#">
+                    EU Climate Pact
+                </a>
+<a class="font-label-sm text-label-sm text-on-surface-variant dark:text-surface-variant hover:text-secondary dark:hover:text-secondary-fixed opacity-80 hover:opacity-100 transition-colors" href="#">
+                    Methodology
+                </a>
+</nav>
+</div>
+</footer>
+</body></html>

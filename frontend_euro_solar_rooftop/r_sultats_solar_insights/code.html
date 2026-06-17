@@ -1,0 +1,468 @@
+<!DOCTYPE html>
+
+<html lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Solar Insights - Results Dashboard</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com" rel="preconnect"/>
+<link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect"/>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&amp;family=Montserrat:wght@600;700&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+        tailwind.config = {
+          darkMode: "class",
+          theme: {
+            extend: {
+              "colors": {
+                      "inverse-surface": "#213145",
+                      "secondary": "#006e1c",
+                      "on-primary": "#ffffff",
+                      "secondary-fixed-dim": "#78dc77",
+                      "surface-dim": "#cbdbf5",
+                      "on-tertiary-fixed": "#111c2d",
+                      "error": "#ba1a1a",
+                      "on-primary-fixed-variant": "#544600",
+                      "tertiary-fixed-dim": "#bcc7de",
+                      "surface-variant": "#d3e4fe",
+                      "background": "#f8f9ff",
+                      "secondary-container": "#91f78e",
+                      "secondary-fixed": "#94f990",
+                      "on-error": "#ffffff",
+                      "on-surface": "#0b1c30",
+                      "on-primary-container": "#705e00",
+                      "on-secondary-fixed-variant": "#005313",
+                      "on-secondary-fixed": "#002204",
+                      "surface-container": "#e5eeff",
+                      "outline": "#7e775f",
+                      "on-error-container": "#93000a",
+                      "surface-tint": "#705d00",
+                      "primary": "#705d00",
+                      "inverse-primary": "#e9c400",
+                      "outline-variant": "#d0c6ab",
+                      "inverse-on-surface": "#eaf1ff",
+                      "surface-container-lowest": "#ffffff",
+                      "surface-bright": "#f8f9ff",
+                      "on-secondary": "#ffffff",
+                      "tertiary-container": "#cfdaf2",
+                      "on-primary-fixed": "#221b00",
+                      "on-tertiary-container": "#545f74",
+                      "on-tertiary": "#ffffff",
+                      "tertiary-fixed": "#d8e3fb",
+                      "surface-container-low": "#eff4ff",
+                      "on-surface-variant": "#4d4732",
+                      "tertiary": "#545f73",
+                      "primary-fixed-dim": "#e9c400",
+                      "on-background": "#0b1c30",
+                      "surface-container-highest": "#d3e4fe",
+                      "primary-fixed": "#ffe16d",
+                      "on-tertiary-fixed-variant": "#3c475a",
+                      "primary-container": "#ffd700",
+                      "error-container": "#ffdad6",
+                      "surface": "#f8f9ff",
+                      "surface-container-high": "#dce9ff",
+                      "on-secondary-container": "#00731e"
+              },
+              "borderRadius": {
+                      "DEFAULT": "0.25rem",
+                      "lg": "0.5rem",
+                      "xl": "0.75rem",
+                      "full": "9999px"
+              },
+              "spacing": {
+                      "base": "8px",
+                      "margin-desktop": "40px",
+                      "gutter": "24px",
+                      "container-max": "1280px",
+                      "margin-mobile": "16px"
+              },
+              "fontFamily": {
+                      "label-md": [
+                              "Inter"
+                      ],
+                      "headline-md": [
+                              "Montserrat"
+                      ],
+                      "label-sm": [
+                              "Inter"
+                      ],
+                      "body-sm": [
+                              "Inter"
+                      ],
+                      "body-md": [
+                              "Inter"
+                      ],
+                      "body-lg": [
+                              "Inter"
+                      ],
+                      "headline-lg": [
+                              "Montserrat"
+                      ],
+                      "headline-lg-mobile": [
+                              "Montserrat"
+                      ],
+                      "headline-xl": [
+                              "Montserrat"
+                      ]
+              },
+              "fontSize": {
+                      "label-md": [
+                              "14px",
+                              {
+                                      "lineHeight": "16px",
+                                      "letterSpacing": "0.02em",
+                                      "fontWeight": "600"
+                              }
+                      ],
+                      "headline-md": [
+                              "24px",
+                              {
+                                      "lineHeight": "32px",
+                                      "fontWeight": "600"
+                              }
+                      ],
+                      "label-sm": [
+                              "12px",
+                              {
+                                      "lineHeight": "16px",
+                                      "fontWeight": "500"
+                              }
+                      ],
+                      "body-sm": [
+                              "14px",
+                              {
+                                      "lineHeight": "20px",
+                                      "fontWeight": "400"
+                              }
+                      ],
+                      "body-md": [
+                              "16px",
+                              {
+                                      "lineHeight": "24px",
+                                      "fontWeight": "400"
+                              }
+                      ],
+                      "body-lg": [
+                              "18px",
+                              {
+                                      "lineHeight": "28px",
+                                      "fontWeight": "400"
+                              }
+                      ],
+                      "headline-lg": [
+                              "32px",
+                              {
+                                      "lineHeight": "40px",
+                                      "letterSpacing": "-0.01em",
+                                      "fontWeight": "700"
+                              }
+                      ],
+                      "headline-lg-mobile": [
+                              "24px",
+                              {
+                                      "lineHeight": "32px",
+                                      "fontWeight": "700"
+                              }
+                      ],
+                      "headline-xl": [
+                              "48px",
+                              {
+                                      "lineHeight": "56px",
+                                      "letterSpacing": "-0.02em",
+                                      "fontWeight": "700"
+                              }
+                      ]
+              }
+      },
+          },
+        }
+      </script>
+<style>
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 1, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+        }
+        .card-shadow {
+            box-shadow: 0px 2px 8px rgba(84, 95, 115, 0.04);
+        }
+    </style>
+</head>
+<body class="bg-background text-on-background min-h-screen flex flex-col font-body-md">
+<!-- TopNavBar -->
+<nav class="bg-surface dark:bg-inverse-surface shadow-sm sticky top-0 z-50 w-full transition-colors duration-300">
+<div class="flex justify-between items-center w-full px-margin-mobile md:px-margin-desktop max-w-container-max mx-auto h-20">
+<!-- Brand Logo -->
+<a class="font-headline-md text-headline-md font-bold text-on-surface dark:text-inverse-on-surface flex items-center gap-2" href="#">
+<span class="material-symbols-outlined text-primary dark:text-inverse-primary" style="font-variation-settings: 'FILL' 1;">solar_power</span>
+                Solar Insights
+            </a>
+<!-- Navigation Links (Desktop) -->
+<div class="hidden md:flex items-center gap-6">
+<a class="font-label-md text-label-md text-on-surface-variant dark:text-surface-variant hover:text-primary dark:hover:text-inverse-primary transition-colors" href="#">Analysis</a>
+<a class="font-label-md text-label-md text-primary dark:text-inverse-primary border-b-2 border-primary dark:border-inverse-primary pb-1 hover:text-primary dark:hover:text-inverse-primary transition-colors" href="#">Dashboard</a>
+<a class="font-label-md text-label-md text-on-surface-variant dark:text-surface-variant hover:text-primary dark:hover:text-inverse-primary transition-colors" href="#">EU Context</a>
+<a class="font-label-md text-label-md text-on-surface-variant dark:text-surface-variant hover:text-primary dark:hover:text-inverse-primary transition-colors" href="#">About</a>
+</div>
+<!-- Trailing Action -->
+<div class="flex items-center gap-4">
+<button class="hidden md:flex bg-primary text-on-primary font-label-md text-label-md px-6 py-3 rounded-full hover:bg-surface-tint transition-colors scale-95 active:scale-90 transition-transform duration-200 shadow-sm">
+                    Find My Roof
+                </button>
+<button class="md:hidden text-on-surface dark:text-inverse-on-surface">
+<span class="material-symbols-outlined">menu</span>
+</button>
+</div>
+</div>
+</nav>
+<!-- Main Content Canvas -->
+<main class="flex-grow w-full max-w-container-max mx-auto px-margin-mobile md:px-margin-desktop py-12 flex flex-col lg:flex-row gap-gutter">
+<!-- Left Column: Dashboard Grid & Chart -->
+<div class="flex-grow flex flex-col gap-gutter w-full lg:w-2/3">
+<header class="mb-4">
+<h1 class="font-headline-lg text-headline-lg text-on-surface">Votre Potentiel Solaire</h1>
+<p class="font-body-md text-body-md text-on-surface-variant mt-2">Estimation basée sur l'analyse de votre toiture et les données d'ensoleillement locales.</p>
+</header>
+<!-- KPI Grid -->
+<div class="grid grid-cols-1 sm:grid-cols-2 gap-gutter">
+<!-- Card 1: Production -->
+<div class="bg-surface-container-lowest rounded-xl p-6 card-shadow border border-outline-variant/30 flex flex-col justify-between">
+<div class="flex justify-between items-start mb-4">
+<div class="bg-primary-container/20 p-3 rounded-full">
+<span class="material-symbols-outlined text-primary text-2xl" style="font-variation-settings: 'FILL' 1;">bolt</span>
+</div>
+</div>
+<div>
+<p class="font-label-sm text-label-sm text-on-surface-variant uppercase tracking-wider mb-1">Production annuelle estimée</p>
+<div class="flex items-baseline gap-2">
+<h2 class="font-headline-xl text-headline-xl text-on-surface">6,450</h2>
+<span class="font-body-sm text-body-sm text-on-surface-variant">kWh</span>
+</div>
+</div>
+</div>
+<!-- Card 2: Savings -->
+<div class="bg-surface-container-lowest rounded-xl p-6 card-shadow border border-outline-variant/30 flex flex-col justify-between">
+<div class="flex justify-between items-start mb-4">
+<div class="bg-secondary-container/30 p-3 rounded-full">
+<span class="material-symbols-outlined text-secondary text-2xl" style="font-variation-settings: 'FILL' 1;">euro</span>
+</div>
+</div>
+<div>
+<p class="font-label-sm text-label-sm text-on-surface-variant uppercase tracking-wider mb-1">Économies annuelles (Facture)</p>
+<div class="flex items-baseline gap-2">
+<h2 class="font-headline-xl text-headline-xl text-on-surface">1,240</h2>
+<span class="font-body-sm text-body-sm text-on-surface-variant">€ / an</span>
+</div>
+</div>
+</div>
+<!-- Card 3: CO2 -->
+<div class="bg-surface-container-lowest rounded-xl p-6 card-shadow border border-outline-variant/30 flex flex-col justify-between">
+<div class="flex justify-between items-start mb-4">
+<div class="bg-secondary-container/30 p-3 rounded-full">
+<span class="material-symbols-outlined text-secondary text-2xl" style="font-variation-settings: 'FILL' 1;">eco</span>
+</div>
+<span class="bg-secondary text-on-secondary font-label-sm text-label-sm px-2 py-1 rounded-full flex items-center gap-1">Eco-Friendly</span>
+</div>
+<div>
+<p class="font-label-sm text-label-sm text-on-surface-variant uppercase tracking-wider mb-1">CO2 évité par an</p>
+<div class="flex items-baseline gap-2">
+<h2 class="font-headline-lg text-headline-lg text-on-surface">1.8</h2>
+<span class="font-body-sm text-body-sm text-on-surface-variant">Tonnes</span>
+</div>
+<p class="font-label-sm text-label-sm text-secondary mt-2 flex items-center gap-1">
+<span class="material-symbols-outlined text-sm" style="font-variation-settings: 'FILL' 1;">forest</span>
+                            Équivalent à ~85 arbres plantés
+                        </p>
+</div>
+</div>
+<!-- Card 4: ROI -->
+<div class="bg-surface-container-lowest rounded-xl p-6 card-shadow border border-outline-variant/30 flex flex-col justify-between">
+<div class="flex justify-between items-start mb-4">
+<div class="bg-tertiary-container/40 p-3 rounded-full">
+<span class="material-symbols-outlined text-tertiary text-2xl" style="font-variation-settings: 'FILL' 1;">trending_up</span>
+</div>
+<span class="bg-primary-container text-on-primary-container font-label-sm text-label-sm px-2 py-1 rounded-full flex items-center gap-1">Haut Potentiel</span>
+</div>
+<div>
+<p class="font-label-sm text-label-sm text-on-surface-variant uppercase tracking-wider mb-1">Retour sur investissement</p>
+<div class="flex items-baseline gap-2">
+<h2 class="font-headline-lg text-headline-lg text-on-surface">6.5</h2>
+<span class="font-body-sm text-body-sm text-on-surface-variant">Années</span>
+</div>
+<p class="font-body-sm text-body-sm text-on-surface-variant mt-2">Durée de vie estimée: 25+ ans</p>
+</div>
+</div>
+</div>
+<!-- Main Chart Area -->
+<div class="bg-surface-container-lowest rounded-xl p-6 card-shadow border border-outline-variant/30 mt-4">
+<div class="flex justify-between items-center mb-6">
+<h3 class="font-headline-md text-headline-md text-tertiary">Économies cumulées sur 10 ans</h3>
+<div class="flex gap-2">
+<span class="flex items-center gap-1 font-label-sm text-label-sm text-on-surface-variant"><div class="w-3 h-3 rounded-full bg-primary"></div> Solaire</span>
+<span class="flex items-center gap-1 font-label-sm text-label-sm text-on-surface-variant"><div class="w-3 h-3 rounded-full bg-tertiary-fixed"></div> Réseau</span>
+</div>
+</div>
+<div class="relative w-full h-[300px]">
+<canvas id="savingsChart"></canvas>
+</div>
+</div>
+</div>
+<!-- Right Column: Sidebar / Next Steps -->
+<aside class="w-full lg:w-1/3 flex flex-col gap-6">
+<!-- Contextual Image Card -->
+<div class="bg-surface-container-lowest rounded-xl overflow-hidden card-shadow border border-outline-variant/30">
+<div class="h-48 w-full bg-surface-container relative">
+<img alt="A highly detailed 3D render of a modern suburban house with sleek solar panels seamlessly integrated into the roof. The scene is bathed in bright, optimistic morning sunlight, creating a high-key, light-mode aesthetic. The color palette features pristine whites, soft slate blues, and vibrant sustainable greens, evoking a sense of technological innovation and eco-friendly living." class="w-full h-full object-cover" data-alt="A highly detailed 3D render of a modern suburban house with sleek solar panels seamlessly integrated into the roof. The scene is bathed in bright, optimistic morning sunlight, creating a high-key, light-mode aesthetic. The color palette features pristine whites, soft slate blues, and vibrant sustainable greens, evoking a sense of technological innovation and eco-friendly living." src="https://lh3.googleusercontent.com/aida-public/AB6AXuDjHS0p2nw0LxAokz9vU4o0-eqzv0cLbWQIlMjC8ZcvByLTQ46a5Mxt1bJRKcam2LX8WqdI8O70ZnkbOxUvGnFjwbEDYX6jLcYWw7pvXvCIju7mzCddhKekKK58EOLq86N6CAVY7P8kukKRESrqoBJnZIm-LOZduxqjRpFJXM9_NR_8umoGXUrgybEq9-jnPMcVbjOxB9bsUHXn_XXsiywP_Ya1J_sdHe2IN3v6cNMOUy9oYVBoeVqPj1DjEOcF_jMoeXld64fhczXM"/>
+<div class="absolute inset-0 bg-gradient-to-t from-black/50 to-transparent flex items-end p-4">
+<span class="text-white font-label-md text-label-md flex items-center gap-2">
+<span class="material-symbols-outlined text-sm">location_on</span> Vue de votre toiture
+                        </span>
+</div>
+</div>
+<div class="p-6">
+<h3 class="font-headline-md text-headline-md text-on-surface mb-2">Prêt à passer à l'action ?</h3>
+<p class="font-body-sm text-body-sm text-on-surface-variant mb-6">Votre toiture présente d'excellentes caractéristiques pour une installation solaire. Nos experts locaux peuvent affiner ce devis.</p>
+<div class="flex flex-col gap-3">
+<button class="w-full bg-primary text-on-primary font-label-md text-label-md px-6 py-4 rounded-xl hover:bg-surface-tint transition-colors flex items-center justify-center gap-2 shadow-sm">
+<span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 1;">person_add</span>
+                            Contacter un installateur
+                        </button>
+<button class="w-full bg-transparent border border-outline text-on-surface font-label-md text-label-md px-6 py-4 rounded-xl hover:bg-surface-container-low transition-colors flex items-center justify-center gap-2">
+<span class="material-symbols-outlined">download</span>
+                            Télécharger le rapport PDF
+                        </button>
+</div>
+</div>
+</div>
+<!-- Details List -->
+<div class="bg-surface-container-lowest rounded-xl p-6 card-shadow border border-outline-variant/30">
+<h4 class="font-label-md text-label-md text-on-surface uppercase tracking-wider mb-4 border-b border-outline-variant/30 pb-2">Détails de l'installation</h4>
+<ul class="flex flex-col gap-4">
+<li class="flex justify-between items-center">
+<span class="font-body-sm text-body-sm text-on-surface-variant">Surface utilisable</span>
+<span class="font-label-md text-label-md text-on-surface">32 m²</span>
+</li>
+<li class="flex justify-between items-center">
+<span class="font-body-sm text-body-sm text-on-surface-variant">Orientation optimale</span>
+<span class="font-label-md text-label-md text-on-surface">Sud-Ouest</span>
+</li>
+<li class="flex justify-between items-center">
+<span class="font-body-sm text-body-sm text-on-surface-variant">Nombre de panneaux req.</span>
+<span class="font-label-md text-label-md text-on-surface">16</span>
+</li>
+</ul>
+</div>
+</aside>
+</main>
+<!-- Footer -->
+<footer class="bg-surface-container-low dark:bg-inverse-surface border-t border-outline-variant dark:border-outline mt-auto w-full transition-colors duration-300">
+<div class="w-full py-12 px-margin-mobile md:px-margin-desktop flex flex-col md:flex-row justify-between items-center max-w-container-max mx-auto gap-6 md:gap-0">
+<!-- Brand / Copyright -->
+<div class="flex flex-col items-center md:items-start gap-2">
+<span class="font-headline-md text-headline-md font-bold text-on-surface dark:text-inverse-on-surface flex items-center gap-2">
+<span class="material-symbols-outlined text-primary dark:text-inverse-primary" style="font-variation-settings: 'FILL' 1;">solar_power</span>
+                    Solar Insights
+                </span>
+<p class="font-body-sm text-body-sm text-on-surface-variant dark:text-surface-variant">
+                    © 2024 Solar Insights. Data powered by Eurostat.
+                </p>
+</div>
+<!-- Footer Links -->
+<div class="flex flex-wrap justify-center gap-4 md:gap-6">
+<a class="font-label-sm text-label-sm text-on-surface-variant dark:text-surface-variant hover:text-secondary dark:hover:text-secondary-fixed opacity-80 hover:opacity-100 transition-colors" href="#">Privacy Policy</a>
+<a class="font-label-sm text-label-sm text-on-surface-variant dark:text-surface-variant hover:text-secondary dark:hover:text-secondary-fixed opacity-80 hover:opacity-100 transition-colors" href="#">Terms of Service</a>
+<a class="font-label-sm text-label-sm text-on-surface-variant dark:text-surface-variant hover:text-secondary dark:hover:text-secondary-fixed opacity-80 hover:opacity-100 transition-colors" href="#">EU Climate Pact</a>
+<a class="font-label-sm text-label-sm text-on-surface-variant dark:text-surface-variant hover:text-secondary dark:hover:text-secondary-fixed opacity-80 hover:opacity-100 transition-colors" href="#">Methodology</a>
+</div>
+</div>
+</footer>
+<!-- Chart Setup Script -->
+<script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const ctx = document.getElementById('savingsChart').getContext('2d');
+            
+            // Dummy data for cumulative savings over 10 years
+            const years = ['Année 1', 'Année 2', 'Année 3', 'Année 4', 'Année 5', 'Année 6', 'Année 7', 'Année 8', 'Année 9', 'Année 10'];
+            const solarCost = [8000, 7800, 7500, 7200, 6800, 6300, 5800, 5000, 4000, 2500]; // Decreasing (paying off investment)
+            const gridCost = [1500, 3100, 4800, 6600, 8500, 10500, 12600, 14800, 17100, 19500]; // Increasing cumulative grid cost
+
+            new Chart(ctx, {
+                type: 'line',
+                data: {
+                    labels: years,
+                    datasets: [
+                        {
+                            label: 'Coût cumulé (Réseau classique)',
+                            data: gridCost,
+                            borderColor: '#d8e3fb', // tertiary-fixed
+                            backgroundColor: 'rgba(216, 227, 251, 0.1)',
+                            borderWidth: 2,
+                            fill: true,
+                            tension: 0.4,
+                            pointBackgroundColor: '#d8e3fb'
+                        },
+                        {
+                            label: 'Coût cumulé (Solaire)',
+                            data: solarCost,
+                            borderColor: '#705d00', // primary
+                            backgroundColor: 'rgba(112, 93, 0, 0.05)',
+                            borderWidth: 3,
+                            fill: true,
+                            tension: 0.4,
+                            pointBackgroundColor: '#705d00',
+                            pointRadius: 4
+                        }
+                    ]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: {
+                        legend: {
+                            display: false // Hidden because we built a custom legend in HTML
+                        },
+                        tooltip: {
+                            mode: 'index',
+                            intersect: false,
+                            backgroundColor: '#0b1c30', // on-surface
+                            titleFont: { family: 'Inter', size: 14 },
+                            bodyFont: { family: 'Inter', size: 12 },
+                            padding: 10,
+                            cornerRadius: 8
+                        }
+                    },
+                    scales: {
+                        y: {
+                            beginAtZero: true,
+                            grid: {
+                                color: 'rgba(208, 198, 171, 0.3)', // outline-variant with opacity
+                                drawBorder: false
+                            },
+                            ticks: {
+                                color: '#4d4732', // on-surface-variant
+                                font: { family: 'Inter', size: 12 },
+                                callback: function(value) {
+                                    return value + ' €';
+                                }
+                            }
+                        },
+                        x: {
+                            grid: {
+                                display: false
+                            },
+                            ticks: {
+                                color: '#4d4732', // on-surface-variant
+                                font: { family: 'Inter', size: 12 }
+                            }
+                        }
+                    },
+                    interaction: {
+                        mode: 'nearest',
+                        axis: 'x',
+                        intersect: false
+                    }
+                }
+            });
+        });
+    </script>
+</body></html>

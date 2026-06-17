@@ -1,0 +1,231 @@
+<!DOCTYPE html>
+
+<html class="light" lang="fr"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Solar Insights - Analyse du Toit</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&amp;family=Montserrat:wght@600;700&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    "colors": {
+                        "inverse-surface": "#213145",
+                        "secondary": "#006e1c",
+                        "on-primary": "#ffffff",
+                        "secondary-fixed-dim": "#78dc77",
+                        "surface-dim": "#cbdbf5",
+                        "on-tertiary-fixed": "#111c2d",
+                        "error": "#ba1a1a",
+                        "on-primary-fixed-variant": "#544600",
+                        "tertiary-fixed-dim": "#bcc7de",
+                        "surface-variant": "#d3e4fe",
+                        "background": "#f8f9ff",
+                        "secondary-container": "#91f78e",
+                        "secondary-fixed": "#94f990",
+                        "on-error": "#ffffff",
+                        "on-surface": "#0b1c30",
+                        "on-primary-container": "#705e00",
+                        "on-secondary-fixed-variant": "#005313",
+                        "on-secondary-fixed": "#002204",
+                        "surface-container": "#e5eeff",
+                        "outline": "#7e775f",
+                        "on-error-container": "#93000a",
+                        "surface-tint": "#705d00",
+                        "primary": "#705d00",
+                        "inverse-primary": "#e9c400",
+                        "outline-variant": "#d0c6ab",
+                        "inverse-on-surface": "#eaf1ff",
+                        "surface-container-lowest": "#ffffff",
+                        "surface-bright": "#f8f9ff",
+                        "on-secondary": "#ffffff",
+                        "tertiary-container": "#cfdaf2",
+                        "on-primary-fixed": "#221b00",
+                        "on-tertiary-container": "#545f74",
+                        "on-tertiary": "#ffffff",
+                        "tertiary-fixed": "#d8e3fb",
+                        "surface-container-low": "#eff4ff",
+                        "on-surface-variant": "#4d4732",
+                        "tertiary": "#545f73",
+                        "primary-fixed-dim": "#e9c400",
+                        "on-background": "#0b1c30",
+                        "surface-container-highest": "#d3e4fe",
+                        "primary-fixed": "#ffe16d",
+                        "on-tertiary-fixed-variant": "#3c475a",
+                        "primary-container": "#ffd700",
+                        "error-container": "#ffdad6",
+                        "surface": "#f8f9ff",
+                        "surface-container-high": "#dce9ff",
+                        "on-secondary-container": "#00731e"
+                    },
+                    "borderRadius": {
+                        "DEFAULT": "0.25rem",
+                        "lg": "0.5rem",
+                        "xl": "0.75rem",
+                        "full": "9999px"
+                    },
+                    "spacing": {
+                        "base": "8px",
+                        "margin-desktop": "40px",
+                        "gutter": "24px",
+                        "container-max": "1280px",
+                        "margin-mobile": "16px"
+                    },
+                    "fontFamily": {
+                        "label-md": ["Inter"],
+                        "headline-md": ["Montserrat"],
+                        "label-sm": ["Inter"],
+                        "body-sm": ["Inter"],
+                        "body-md": ["Inter"],
+                        "body-lg": ["Inter"],
+                        "headline-lg": ["Montserrat"],
+                        "headline-lg-mobile": ["Montserrat"],
+                        "headline-xl": ["Montserrat"]
+                    },
+                    "fontSize": {
+                        "label-md": ["14px", { "lineHeight": "16px", "letterSpacing": "0.02em", "fontWeight": "600" }],
+                        "headline-md": ["24px", { "lineHeight": "32px", "fontWeight": "600" }],
+                        "label-sm": ["12px", { "lineHeight": "16px", "fontWeight": "500" }],
+                        "body-sm": ["14px", { "lineHeight": "20px", "fontWeight": "400" }],
+                        "body-md": ["16px", { "lineHeight": "24px", "fontWeight": "400" }],
+                        "body-lg": ["18px", { "lineHeight": "28px", "fontWeight": "400" }],
+                        "headline-lg": ["32px", { "lineHeight": "40px", "letterSpacing": "-0.01em", "fontWeight": "700" }],
+                        "headline-lg-mobile": ["24px", { "lineHeight": "32px", "fontWeight": "700" }],
+                        "headline-xl": ["48px", { "lineHeight": "56px", "letterSpacing": "-0.02em", "fontWeight": "700" }]
+                    }
+                }
+            }
+        }
+    </script>
+<style>
+        .map-overlay {
+            background: linear-gradient(180deg, rgba(248, 249, 255, 0) 0%, rgba(248, 249, 255, 0.8) 100%);
+        }
+        .widget-shadow {
+            box-shadow: 0 2px 8px rgba(84, 95, 115, 0.04);
+        }
+        .input-focus-effect:focus-within {
+            box-shadow: 0 4px 16px rgba(112, 93, 0, 0.08);
+            border-bottom: 2px solid #ffd700;
+        }
+    </style>
+</head>
+<body class="bg-background text-on-background min-h-screen flex flex-col font-body-md overflow-hidden">
+<!-- TopNavBar -->
+<header class="bg-surface shadow-sm docked full-width top-0 z-50">
+<div class="flex justify-between items-center w-full px-margin-desktop max-w-container-max mx-auto h-20">
+<div class="flex items-center gap-4">
+<span class="material-symbols-outlined text-primary text-3xl" style="font-variation-settings: 'FILL' 1;">solar_power</span>
+<span class="font-headline-md text-headline-md font-bold text-on-surface">Solar Insights</span>
+</div>
+<nav class="hidden md:flex gap-8">
+<a class="font-label-md text-label-md text-primary border-b-2 border-primary pb-1" href="#">Analysis</a>
+<a class="font-label-md text-label-md text-on-surface-variant hover:text-primary transition-colors" href="#">Dashboard</a>
+<a class="font-label-md text-label-md text-on-surface-variant hover:text-primary transition-colors" href="#">EU Context</a>
+<a class="font-label-md text-label-md text-on-surface-variant hover:text-primary transition-colors" href="#">About</a>
+</nav>
+<div class="flex items-center gap-4">
+<button class="font-label-md text-label-md bg-primary-container text-on-primary-container px-6 py-3 rounded-full hover:bg-primary hover:text-on-primary transition-colors shadow-sm">
+                    Find My Roof
+                </button>
+</div>
+</div>
+</header>
+<!-- Main Content: Full Screen Split -->
+<main class="flex-1 flex flex-col lg:flex-row w-full h-[calc(100vh-80px)]">
+<!-- Left Side: Interactive Map (60%) -->
+<section class="relative w-full lg:w-[60%] h-1/2 lg:h-full bg-surface-container-high border-r border-outline-variant overflow-hidden">
+<!-- Simulated Map Image -->
+<img alt="Satellite view of roof" class="absolute inset-0 w-full h-full object-cover" data-alt="A highly detailed satellite view of a suburban neighborhood, focusing on a specific house with a clear, well-structured roof. Digital, glowing geometric overlays in bright yellow and neon green are superimposed on the roof, representing a highly precise solar panel placement analysis. The lighting is crisp and natural, contrasting with the high-tech, futuristic UI overlays. The overall aesthetic is professional, data-driven, and optimistic, blending realistic environment capture with advanced SaaS visualization." data-location="Paris" src="https://lh3.googleusercontent.com/aida-public/AB6AXuCU5RFOEgQ1sYKl3VSMi7kRogI3-cDbtMQdCXVbx3Bl5YXcpgZEVXIR67mcqceGNbze45kZQ7heZdvNlFdTwjv-iBYMb2hYIwNJiRnjUwfPrEkk8-PFkUKYE1C8FDIQKxcT6UDpXTfDSYfG354RmXtQCAoJ7OcgWyLXxIV8Pg1QQ6wtx1qqjcgVyIoO-1FprGFwq5Dx6r6VGNBgb21q-ScHhr_8RavB6xPK6mkEm8i7oLvHN_6NidBLk2TONPl1m5X45ARveZtSpaFX"/>
+<!-- Map Controls / Overlays -->
+<div class="absolute top-margin-desktop left-margin-desktop flex flex-col gap-2">
+<button aria-label="Zoom In" class="bg-surface text-on-surface p-2 rounded-lg shadow-md hover:bg-surface-variant transition-colors">
+<span class="material-symbols-outlined">add</span>
+</button>
+<button aria-label="Zoom Out" class="bg-surface text-on-surface p-2 rounded-lg shadow-md hover:bg-surface-variant transition-colors">
+<span class="material-symbols-outlined">remove</span>
+</button>
+</div>
+<!-- Status Chip on Map -->
+<div class="absolute top-margin-desktop right-margin-desktop bg-secondary-container text-on-secondary-container px-4 py-2 rounded-full font-label-sm text-label-sm flex items-center gap-2 shadow-sm">
+<span class="material-symbols-outlined text-[16px]" style="font-variation-settings: 'FILL' 1;">check_circle</span>
+                Potentiel Élevé
+            </div>
+</section>
+<!-- Right Side: Sidebar (40%) -->
+<section class="w-full lg:w-[40%] h-1/2 lg:h-full bg-surface overflow-y-auto p-margin-mobile lg:p-margin-desktop flex flex-col gap-gutter">
+<div>
+<h1 class="font-headline-lg text-headline-lg-mobile lg:text-headline-lg text-on-surface mb-2">Paramètres de votre toit</h1>
+<p class="font-body-sm text-body-sm text-on-surface-variant">Ajustez les détails pour affiner l'analyse de votre potentiel solaire.</p>
+</div>
+<!-- Inputs / Parameters -->
+<div class="flex flex-col gap-4">
+<!-- Surface -->
+<div class="bg-surface-container-lowest rounded-xl p-4 widget-shadow border border-surface-variant input-focus-effect transition-all">
+<label class="font-label-sm text-label-sm text-on-surface-variant flex items-center gap-2 mb-2">
+<span class="material-symbols-outlined text-[18px]">straighten</span>
+                        Surface exploitable (m²)
+                    </label>
+<div class="flex items-center">
+<input class="w-full bg-transparent border-none font-body-lg text-body-lg text-on-surface focus:ring-0 p-0" type="number" value="45"/>
+</div>
+</div>
+<!-- Inclinaison -->
+<div class="bg-surface-container-lowest rounded-xl p-4 widget-shadow border border-surface-variant input-focus-effect transition-all">
+<label class="font-label-sm text-label-sm text-on-surface-variant flex items-center gap-2 mb-2">
+<span class="material-symbols-outlined text-[18px]">architecture</span>
+                        Inclinaison du toit
+                    </label>
+<select class="w-full bg-transparent border-none font-body-lg text-body-lg text-on-surface focus:ring-0 p-0 cursor-pointer">
+<option>30° (Standard)</option>
+<option>15° (Faible)</option>
+<option>45° (Forte)</option>
+<option>Toit Plat</option>
+</select>
+</div>
+<!-- Orientation -->
+<div class="bg-surface-container-lowest rounded-xl p-4 widget-shadow border border-surface-variant input-focus-effect transition-all">
+<label class="font-label-sm text-label-sm text-on-surface-variant flex items-center gap-2 mb-2">
+<span class="material-symbols-outlined text-[18px]">explore</span>
+                        Orientation
+                    </label>
+<div class="flex gap-2 mt-2">
+<button class="flex-1 py-2 rounded-lg bg-surface-variant text-on-surface font-label-md text-label-md hover:bg-surface-container-high transition-colors">Est</button>
+<button class="flex-1 py-2 rounded-lg bg-primary-container text-on-primary-container font-label-md text-label-md shadow-sm border border-primary">Sud</button>
+<button class="flex-1 py-2 rounded-lg bg-surface-variant text-on-surface font-label-md text-label-md hover:bg-surface-container-high transition-colors">Ouest</button>
+</div>
+</div>
+</div>
+<!-- Summary Widget -->
+<div class="mt-4 bg-tertiary-fixed text-on-tertiary-fixed rounded-xl p-6 relative overflow-hidden">
+<!-- Decorative element -->
+<div class="absolute -right-4 -top-4 opacity-10">
+<span class="material-symbols-outlined text-[120px]" style="font-variation-settings: 'FILL' 1;">solar_power</span>
+</div>
+<h3 class="font-headline-md text-headline-md mb-6 relative z-10">Estimation du Système</h3>
+<div class="flex justify-between items-center relative z-10">
+<div>
+<p class="font-label-sm text-label-sm text-on-tertiary-fixed-variant mb-1">Capacité estimée</p>
+<p class="font-headline-lg text-headline-lg-mobile lg:text-headline-lg font-bold text-on-tertiary-fixed">8.2 <span class="font-body-md text-body-md">kWp</span></p>
+</div>
+<div class="h-12 w-px bg-on-tertiary-fixed opacity-20"></div>
+<div>
+<p class="font-label-sm text-label-sm text-on-tertiary-fixed-variant mb-1">Nombre de panneaux</p>
+<p class="font-headline-lg text-headline-lg-mobile lg:text-headline-lg font-bold text-on-tertiary-fixed">20</p>
+</div>
+</div>
+</div>
+<!-- Primary CTA -->
+<div class="mt-auto pt-8">
+<button class="w-full bg-primary-container text-on-primary-container font-label-md text-label-md py-4 rounded-xl shadow-md hover:bg-primary hover:text-on-primary transition-colors flex justify-center items-center gap-2">
+<span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 1;">calculate</span>
+                    Calculer mes économies
+                </button>
+</div>
+</section>
+</main>
+</body></html>
