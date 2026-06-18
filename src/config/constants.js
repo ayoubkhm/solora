@@ -54,6 +54,39 @@ export const SUBSIDY_LINK_BY_COUNTRY = {
   PT: 'https://www.dgeg.gov.pt',
 }
 
+// Ressources par pays pour trouver un installateur photovoltaïque ou vérifier les
+// acteurs du secteur. Le marché n'a pas d'annuaire UE unique : selon le pays, on
+// pointe vers un registre officiel, une agence énergie ou une association solaire.
+export const INSTALLER_DIRECTORY_BY_COUNTRY = {
+  AT: { label: 'Photovoltaic Austria', url: 'https://pvaustria.at/' },
+  BE: { label: 'RESCert Belgique', url: 'https://rescert.be/' },
+  BG: { label: 'Agence énergie bulgare', url: 'https://www.seea.government.bg/' },
+  HR: { label: 'Croatian RES Association', url: 'https://oie.hr/' },
+  CY: { label: 'Service énergie de Chypre', url: 'https://www.energy.gov.cy/' },
+  CZ: { label: 'Nová zelená úsporám', url: 'https://novazelenausporam.cz/' },
+  DK: { label: 'SparEnergi', url: 'https://sparenergi.dk/' },
+  EE: { label: 'Renewable Energy Association', url: 'https://www.taastuvenergeetika.ee/' },
+  FI: { label: 'Solar Energy Association Finland', url: 'https://www.aurinkoteknillinenyhdistys.fi/' },
+  FR: { label: 'France Rénov’', url: 'https://france-renov.gouv.fr/annuaires-professionnels/artisan-rge-architecte' },
+  DE: { label: 'BSW Solar', url: 'https://www.solarwirtschaft.de/' },
+  GR: { label: 'HELAPCO', url: 'https://helapco.gr/' },
+  HU: { label: 'Association solaire hongroise', url: 'https://www.mnnsz.hu/' },
+  IE: { label: 'SEAI Solar PV companies', url: 'https://www.seai.ie/' },
+  IT: { label: 'Italia Solare', url: 'https://www.italiasolare.eu/' },
+  LV: { label: 'LEREA', url: 'https://www.lerea.lv/' },
+  LT: { label: 'Agence énergie lituanienne', url: 'https://www.ena.lt/' },
+  LU: { label: 'Klima-Agence', url: 'https://www.klima-agence.lu/' },
+  MT: { label: 'Energy & Water Agency', url: 'https://energywateragency.gov.mt/' },
+  NL: { label: 'Centraal Register Techniek', url: 'https://www.centraalregistertechniek.nl/' },
+  PL: { label: 'Association photovoltaïque Pologne', url: 'https://www.psf.org.pl/' },
+  PT: { label: 'DGEG Portugal', url: 'https://www.dgeg.gov.pt/' },
+  RO: { label: 'AFM Casa Verde', url: 'https://www.afm.ro/' },
+  SK: { label: 'Zelená domácnostiam', url: 'https://zelenadomacnostiam.sk/' },
+  SI: { label: 'Borzen Slovénie', url: 'https://borzen.si/' },
+  ES: { label: 'UNEF Espagne', url: 'https://www.unef.es/' },
+  SE: { label: 'Svensk Solenergi', url: 'https://www.svensksolenergi.se/' },
+}
+
 // Tarif de rachat du surplus réinjecté dans le réseau (€/kWh, ordres de grandeur 2024).
 // Bien inférieur au prix de détail : le surplus est valorisé moins cher que l'autoconsommation.
 export const FEED_IN_BY_COUNTRY = {

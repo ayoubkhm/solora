@@ -1,6 +1,12 @@
 // Utilitaires : chargement de l'API Google Maps, extraction du pays, conversions.
 
-import { GOOGLE_API_KEY, EU_ISO_CODES, COUNTRY_NAMES, SUBSIDY_LINK_BY_COUNTRY } from '../config/constants.js'
+import {
+  GOOGLE_API_KEY,
+  EU_ISO_CODES,
+  COUNTRY_NAMES,
+  SUBSIDY_LINK_BY_COUNTRY,
+  INSTALLER_DIRECTORY_BY_COUNTRY,
+} from '../config/constants.js'
 
 const EU_SET = new Set(EU_ISO_CODES)
 
@@ -15,6 +21,16 @@ export function subsidyLink(code) {
   if (SUBSIDY_LINK_BY_COUNTRY[code]) return SUBSIDY_LINK_BY_COUNTRY[code]
   const name = COUNTRY_NAMES[code] || ''
   return `https://www.google.com/search?q=${encodeURIComponent(`aides panneaux solaires résidentiel ${name}`)}`
+}
+
+// Ressource locale pour identifier ou vérifier des installateurs photovoltaïques.
+export function installerDirectoryForCountry(code) {
+  if (INSTALLER_DIRECTORY_BY_COUNTRY[code]) return INSTALLER_DIRECTORY_BY_COUNTRY[code]
+  const name = COUNTRY_NAMES[code] || 'Union européenne'
+  return {
+    label: `Recherche ${name}`,
+    url: `https://www.google.com/search?q=${encodeURIComponent(`installateur photovoltaïque résidentiel ${name}`)}`,
+  }
 }
 
 let mapsPromise = null
@@ -41,6 +57,7 @@ export function loadGoogleMaps() {
       key: GOOGLE_API_KEY,
       libraries: 'places,geometry', // geometry = computeOffset pour dessiner les panneaux
       callback: callbackName,
+      loading: 'async',
       language: 'fr',
       region: 'EU',
     })

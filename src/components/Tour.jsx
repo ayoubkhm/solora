@@ -1,24 +1,27 @@
 import { useCallback, useEffect, useState } from 'react'
 
-// Tutoriel guidé (coach marks) : met en surbrillance un élément (data-tour="…")
-// et affiche une bulle explicative. Navigation Précédent / Suivant / Passer.
+// Tutoriel guidé (coach marks) : assombrit la page sauf la/les zone(s) ciblée(s),
+// avec une bulle explicative. Navigation Précédent / Suivant / Passer.
 export default function Tour({ steps, onClose }) {
   const [i, setI] = useState(0)
-  const [rect, setRect] = useState(null)
+  const [rects, setRects] = useState({ primary: null, extra: [] })
   const step = steps[i]
   const isLast = i === steps.length - 1
 
+  const rectOf = (el) => {
+    const r = el.getBoundingClientRect()
+    return { top: r.top, left: r.left, width: r.width, height: r.height }
+  }
+
   const measure = useCallback(() => {
     const el = document.querySelector(`[data-tour="${step.target}"]`)
-    if (!el) {
-      setRect(null)
-      return
-    }
-    const r = el.getBoundingClientRect()
-    setRect({ top: r.top, left: r.left, width: r.width, height: r.height })
+    const extra = (step.extra || [])
+      .map((t) => document.querySelector(`[data-tour="${t}"]`))
+      .filter(Boolean)
+      .map(rectOf)
+    setRects({ primary: el ? rectOf(el) : null, extra })
   }, [step])
 
-  // Amène l'élément à l'écran puis mesure sa position (recalcul au scroll/resize).
   useEffect(() => {
     const el = document.querySelector(`[data-tour="${step.target}"]`)
     if (el) el.scrollIntoView({ behavior: 'smooth', block: 'center' })
@@ -32,7 +35,7 @@ export default function Tour({ steps, onClose }) {
     }
   }, [step, measure])
 
-  // Action déclenchée à l'entrée d'une étape (ex. animation de la surface / des mois).
+  // Action à l'entrée d'une étape (ex. animation surface / préparation des mois).
   useEffect(() => {
     steps[i]?.onEnter?.()
     // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -41,7 +44,6 @@ export default function Tour({ steps, onClose }) {
   const next = useCallback(() => {
     if (isLast) {
       onClose()
-      // Dernière étape : on déclenche réellement le bouton ciblé (ex. « Calculer »).
       if (step.clickOnFinish) {
         setTimeout(() => document.querySelector(`[data-tour="${step.target}"]`)?.click(), 60)
       }
@@ -60,71 +62,90 @@ export default function Tour({ steps, onClose }) {
     return () => window.removeEventListener('keydown', onKey)
   }, [next, onClose, i])
 
-  // Cadre de surbrillance (avec marge) et position de la bulle.
+  const vw = typeof window !== 'undefined' ? window.innerWidth : 1280
+  const vh = typeof window !== 'undefined' ? window.innerHeight : 800
   const pad = 8
-  const spot = rect && {
-    top: rect.top - pad,
-    left: rect.left - pad,
-    width: rect.width + pad * 2,
-    height: rect.height + pad * 2,
+  // Le header (sticky) doit rester assombri : aucun trou ne remonte au-dessus de lui.
+  const headerH = (typeof document !== 'undefined' && document.querySelector('header')?.offsetHeight) || 80
+
+  const spotOf = (r) =>
+    r && { top: r.top - pad, left: r.left - pad, width: r.width + pad * 2, height: r.height + pad * 2 }
+
+  // Déborde au-delà des bords d'écran (sauf le haut, réservé au header) → bords nets.
+  const bleed = (s, b = 28) => {
+    let l = s.left
+    let t = s.top
+    let r = s.left + s.width
+    let bo = s.top + s.height
+    if (l <= b) l = -b
+    if (r >= vw - b) r = vw + b
+    if (bo >= vh - b) bo = vh + b
+    if (t < headerH) t = headerH // ne jamais empiéter sur le header
+    return { left: l, top: t, width: r - l, height: Math.max(0, bo - t) }
   }
 
-  // Placement de la bulle : on évite de recouvrir la cible. Pour une grande cible
-  // (ex. la carte plein écran), on bascule sur le côté plutôt que dessus.
+  const primary = spotOf(rects.primary)
+  const holes = [primary, ...rects.extra.map(spotOf)].filter(Boolean).map((h) => bleed(h))
+  const interactive = step.interactive && primary
+  const ringSpot = primary ? bleed(primary) : null
+
+  // Position de la bulle (basée sur la cible principale), sans recouvrir la cible.
   const W = 340
-  const BH = 210 // hauteur estimée de la bulle (pour le clamp)
+  const BH = 210
   let bubble = { top: '50%', left: '50%', transform: 'translate(-50%,-50%)', width: W }
-  if (spot) {
-    const vw = window.innerWidth
-    const vh = window.innerHeight
+  if (primary) {
     const m = 14
     const clampX = (x) => Math.max(m, Math.min(x, vw - W - m))
     const clampY = (y) => Math.max(m, Math.min(y, vh - BH - m))
-    const spaceBelow = vh - (spot.top + spot.height)
-    const spaceAbove = spot.top
-    const spaceRight = vw - (spot.left + spot.width)
-    const spaceLeft = spot.left
+    const spaceBelow = vh - (primary.top + primary.height)
+    const spaceAbove = primary.top
+    const spaceRight = vw - (primary.left + primary.width)
+    const spaceLeft = primary.left
     if (spaceBelow >= BH + m) {
-      bubble = { top: spot.top + spot.height + m, left: clampX(spot.left + spot.width / 2 - W / 2), width: W }
+      bubble = { top: primary.top + primary.height + m, left: clampX(primary.left + primary.width / 2 - W / 2), width: W }
     } else if (spaceAbove >= BH + m) {
-      // Ancrage par le bas : la bulle ne recouvre jamais la cible, quelle que soit sa hauteur.
-      bubble = { bottom: vh - spot.top + m, left: clampX(spot.left + spot.width / 2 - W / 2), width: W }
+      bubble = { bottom: vh - primary.top + m, left: clampX(primary.left + primary.width / 2 - W / 2), width: W }
     } else if (spaceRight >= W + m) {
-      bubble = { top: clampY(spot.top + spot.height / 2 - BH / 2), left: spot.left + spot.width + m, width: W }
+      bubble = { top: clampY(primary.top + primary.height / 2 - BH / 2), left: primary.left + primary.width + m, width: W }
     } else if (spaceLeft >= W + m) {
-      bubble = { top: clampY(spot.top + spot.height / 2 - BH / 2), left: spot.left - m - W, width: W }
+      bubble = { top: clampY(primary.top + primary.height / 2 - BH / 2), left: primary.left - m - W, width: W }
     } else {
-      bubble = { top: clampY(spot.top + spot.height / 2 - BH / 2), left: clampX(spot.left + spot.width / 2 - W / 2), width: W }
+      bubble = { top: clampY(primary.top + primary.height / 2 - BH / 2), left: clampX(primary.left + primary.width / 2 - W / 2), width: W }
     }
   }
 
-  // Étape interactive : on laisse un « trou » cliquable sur la cible (4 bandes autour)
-  // pour que l'utilisateur manipule l'élément (ex. le curseur des mois).
-  const interactive = step.interactive && spot
-
   return (
     <div className="fixed inset-0 z-[90] pointer-events-none">
-      {/* Bloqueur de clics : plein écran, ou 4 bandes laissant la cible cliquable.
-          (La racine est pointer-events-none ; seuls ces bloqueurs captent les clics.) */}
+      {/* Bloqueur de clics (la racine est pointer-events-none) */}
       {interactive ? (
         <>
-          <div className="absolute left-0 right-0 top-0 pointer-events-auto" style={{ height: Math.max(0, spot.top) }} />
-          <div className="absolute left-0 right-0 bottom-0 pointer-events-auto" style={{ top: spot.top + spot.height }} />
-          <div className="absolute left-0 pointer-events-auto" style={{ top: spot.top, height: spot.height, width: Math.max(0, spot.left) }} />
-          <div className="absolute right-0 pointer-events-auto" style={{ top: spot.top, height: spot.height, left: spot.left + spot.width }} />
+          <div className="absolute left-0 right-0 top-0 pointer-events-auto" style={{ height: Math.max(0, primary.top) }} />
+          <div className="absolute left-0 right-0 bottom-0 pointer-events-auto" style={{ top: primary.top + primary.height }} />
+          <div className="absolute left-0 pointer-events-auto" style={{ top: primary.top, height: primary.height, width: Math.max(0, primary.left) }} />
+          <div className="absolute right-0 pointer-events-auto" style={{ top: primary.top, height: primary.height, left: primary.left + primary.width }} />
         </>
       ) : (
         <div className="absolute inset-0 pointer-events-auto" />
       )}
 
-      {/* Surbrillance */}
-      {spot && (
+      {/* Assombrissement via masque SVG (trous nets, plusieurs zones possibles) */}
+      <svg className="absolute inset-0 w-full h-full pointer-events-none">
+        <defs>
+          <mask id="tour-mask">
+            <rect x="0" y="0" width="100%" height="100%" fill="white" />
+            {holes.map((h, k) => (
+              <rect key={k} x={h.left} y={h.top} width={h.width} height={h.height} rx="14" ry="14" fill="black" />
+            ))}
+          </mask>
+        </defs>
+        <rect x="0" y="0" width="100%" height="100%" fill="rgba(11,28,48,0.6)" mask="url(#tour-mask)" />
+      </svg>
+
+      {/* Anneau de surbrillance sur la cible principale */}
+      {ringSpot && (
         <div
-          className={
-            'absolute rounded-xl ring-2 ring-primary pointer-events-none transition-all duration-300 ' +
-            (interactive ? 'animate-pulse' : '')
-          }
-          style={{ ...spot, boxShadow: '0 0 0 9999px rgba(11,28,48,0.6)' }}
+          className={'absolute rounded-xl ring-2 ring-primary pointer-events-none transition-all duration-300 ' + (interactive ? 'animate-pulse' : '')}
+          style={{ top: ringSpot.top, left: ringSpot.left, width: ringSpot.width, height: ringSpot.height }}
         />
       )}
 

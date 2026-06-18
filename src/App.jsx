@@ -11,6 +11,7 @@ import SunLogo from './components/SunLogo.jsx'
 import Tour from './components/Tour.jsx'
 import { getSolarPotential } from './services/solarApi.js'
 import { getElectricityPrice } from './services/eurostatApi.js'
+import { installerDirectoryForCountry } from './services/geoUtils.js'
 import { GOOGLE_API_KEY, COUNTRY_NAMES, ISO_TO_EUROSTAT } from './config/constants.js'
 
 // Routing minimal par hash (sans librairie). Chaque entrée = une vue.
@@ -60,6 +61,7 @@ function buildTourSteps(roofRef) {
     },
     {
       target: 'map',
+      extra: ['surface'],
       title: 'Plus de surface, plus de panneaux ☀️',
       text: "Regardez : quand la surface augmente, les panneaux se multiplient sur votre toit jusqu'au maximum exploitable.",
       onEnter: () => roofRef.current?.animateSurface(),
@@ -247,6 +249,7 @@ export default function App() {
               loading={loadingSolar}
               error={solarError}
               onCompute={handleCompute}
+              onReplayTour={() => setTour(true)}
             />
           ) : (
             <EmptyState
@@ -696,30 +699,35 @@ function Results({ selected, metrics, loadingSolar, solarError, onAdjust, onSeeC
       )}
 
       {/* CTA */}
-      {!loadingSolar && metrics && <CtaBlock />}
+      {!loadingSolar && metrics && <CtaBlock countryCode={selected.countryCode} countryName={countryName} />}
     </div>
   )
 }
 
-function CtaBlock() {
+function CtaBlock({ countryCode, countryName }) {
+  const directory = installerDirectoryForCountry(countryCode)
+  const countryLabel = countryName ? `en ${countryName}` : 'dans ce pays'
+
   return (
     <div className="no-print bg-tertiary-fixed text-on-tertiary-fixed rounded-xl p-8 relative overflow-hidden flex flex-col md:flex-row md:items-center justify-between gap-6">
       <div className="absolute -right-4 -top-4 opacity-10 pointer-events-none">
         <span className="material-symbols-outlined text-[140px]" style={{ fontVariationSettings: "'FILL' 1" }}>solar_power</span>
       </div>
       <div className="relative z-10 max-w-xl">
-        <h3 className="font-headline-md text-headline-md mb-2">Prêt à passer à l'action ?</h3>
+        <h3 className="font-headline-md text-headline-md mb-2">Identifier des installateurs qualifiés</h3>
         <p className="font-body-sm text-body-sm text-on-tertiary-fixed-variant">
-          Votre toiture présente d'excellentes caractéristiques. Nos partenaires installateurs locaux peuvent affiner ce devis.
+          Consultez une ressource locale pour trouver ou vérifier des acteurs photovoltaïques {countryLabel}. Selon les pays, il peut s'agir d'un registre officiel, d'une agence énergie ou d'une association du secteur.
         </p>
       </div>
       <div className="relative z-10 flex flex-col sm:flex-row gap-3 flex-shrink-0">
         <a
-          href="mailto:?subject=Demande%20de%20devis%20solaire&body=Bonjour%2C%20je%20souhaite%20un%20devis%20pour%20une%20installation%20solaire%20sur%20mon%20toit."
+          href={directory.url}
+          target="_blank"
+          rel="noreferrer"
           className="bg-primary-container text-on-primary-fixed font-label-md text-label-md px-6 py-4 rounded-xl hover:brightness-95 transition flex items-center justify-center gap-2 shadow-sm"
         >
-          <span className="material-symbols-outlined" style={{ fontVariationSettings: "'FILL' 1" }}>person_add</span>
-          Contacter un installateur
+          <span className="material-symbols-outlined" style={{ fontVariationSettings: "'FILL' 1" }}>travel_explore</span>
+          Ouvrir {directory.label}
         </a>
         <button
           type="button"
@@ -727,7 +735,7 @@ function CtaBlock() {
           className="bg-surface text-on-surface font-label-md text-label-md px-6 py-4 rounded-xl border border-outline hover:bg-surface-container-low transition-colors flex items-center justify-center gap-2"
         >
           <span className="material-symbols-outlined">download</span>
-          Télécharger le rapport
+          Exporter la simulation
         </button>
       </div>
     </div>

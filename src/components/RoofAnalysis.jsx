@@ -25,7 +25,7 @@ const ORIENTATIONS = [
 // Page « Analyse du toit » : carte + paramètres éditables (surface, inclinaison,
 // orientation) pré-remplis depuis la Solar API. L'estimation se recalcule en direct ;
 // « Calculer mes économies » envoie les métriques ajustées au tableau de bord.
-const RoofAnalysis = forwardRef(function RoofAnalysis({ selected, baseMetrics, loading, error, onCompute }, ref) {
+const RoofAnalysis = forwardRef(function RoofAnalysis({ selected, baseMetrics, loading, error, onCompute, onReplayTour }, ref) {
   const [surface, setSurface] = useState(0)
   const [tilt, setTilt] = useState(30)
   const [orientation, setOrientation] = useState('S')
@@ -163,6 +163,21 @@ const RoofAnalysis = forwardRef(function RoofAnalysis({ selected, baseMetrics, l
           showFlux={showFlux}
         />
 
+        {/* Indicateur central pendant le chargement de l'ensoleillement (GeoTIFF) */}
+        {fluxLoading && !fluxData && (
+          <div className="absolute inset-0 flex items-center justify-center z-10 pointer-events-none">
+            <div className="flex items-center gap-3 bg-surface/90 backdrop-blur px-5 py-3 rounded-xl shadow-lg border border-outline-variant/40">
+              <span className="material-symbols-outlined text-primary animate-spin text-2xl" style={{ fontVariationSettings: "'FILL' 1" }}>
+                progress_activity
+              </span>
+              <div>
+                <p className="font-label-md text-label-md text-on-surface">Calcul de l'ensoleillement…</p>
+                <p className="font-label-sm text-label-sm text-on-surface-variant">Analyse du flux solaire de votre toit</p>
+              </div>
+            </div>
+          </div>
+        )}
+
         {/* Toggles de visualisation */}
         <div className="absolute bottom-4 left-4 flex flex-col gap-2 z-10">
           <MapToggle
@@ -225,16 +240,29 @@ const RoofAnalysis = forwardRef(function RoofAnalysis({ selected, baseMetrics, l
 
       {/* Paramètres */}
       <section className="w-full lg:w-[40%] h-full bg-surface overflow-y-auto p-margin-mobile lg:p-margin-desktop flex flex-col gap-gutter">
-        <div className="shrink-0">
-          <h1 className="font-headline-lg text-headline-lg-mobile lg:text-headline-lg text-on-surface mb-2">
-            Paramètres de votre toit
-          </h1>
-          <p className="font-body-sm text-body-sm text-on-surface-variant flex items-center gap-2">
-            <span className="material-symbols-outlined text-[18px] text-primary" style={{ fontVariationSettings: "'FILL' 1" }}>
-              location_on
-            </span>
-            {selected.address}
-          </p>
+        <div className="shrink-0 flex items-start justify-between gap-3">
+          <div>
+            <h1 className="font-headline-lg text-headline-lg-mobile lg:text-headline-lg text-on-surface mb-2">
+              Paramètres de votre toit
+            </h1>
+            <p className="font-body-sm text-body-sm text-on-surface-variant flex items-center gap-2">
+              <span className="material-symbols-outlined text-[18px] text-primary" style={{ fontVariationSettings: "'FILL' 1" }}>
+                location_on
+              </span>
+              {selected.address}
+            </p>
+          </div>
+          {onReplayTour && (
+            <button
+              type="button"
+              onClick={onReplayTour}
+              className="flex-shrink-0 flex items-center gap-1.5 px-3 py-2 rounded-full border border-outline-variant text-on-surface-variant hover:text-on-surface hover:bg-surface-container-low transition-colors font-label-sm text-label-sm"
+              title="Revoir le tutoriel guidé"
+            >
+              <span className="material-symbols-outlined text-[18px]">help</span>
+              Revoir le tuto
+            </button>
+          )}
         </div>
 
         {error && (
