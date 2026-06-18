@@ -1,4 +1,4 @@
-import { useEffect, useMemo, useState } from 'react'
+import { forwardRef, useEffect, useImperativeHandle, useMemo, useRef, useState } from 'react'
 import Map from './Map.jsx'
 import { adjustMetrics } from '../services/solarApi.js'
 import { formatNumber, subsidyLink } from '../services/geoUtils.js'
@@ -25,14 +25,14 @@ const ORIENTATIONS = [
 // Page « Analyse du toit » : carte + paramètres éditables (surface, inclinaison,
 // orientation) pré-remplis depuis la Solar API. L'estimation se recalcule en direct ;
 // « Calculer mes économies » envoie les métriques ajustées au tableau de bord.
-export default function RoofAnalysis({ selected, baseMetrics, loading, error, onCompute }) {
+const RoofAnalysis = forwardRef(function RoofAnalysis({ selected, baseMetrics, loading, error, onCompute }, ref) {
   const [surface, setSurface] = useState(0)
   const [tilt, setTilt] = useState(30)
   const [orientation, setOrientation] = useState('S')
 
   // Profil de consommation (pour des économies réalistes).
   const [monthlyBill, setMonthlyBill] = useState(0)
-  const [hasBattery, setHasBattery] = useState(false) // pilote le taux d'autoconsommation
+  const [hasBattery, setHasBattery] = useState(true) // batterie par défaut ; pilote l'autoconsommation
 
   // Visualisation carte.
   const [fluxData, setFluxData] = useState(null) // { bounds, annual, months[], monthRange }
@@ -40,6 +40,49 @@ export default function RoofAnalysis({ selected, baseMetrics, loading, error, on
   const [monthIndex, setMonthIndex] = useState(null) // null = vue annuelle ; 0-11 = mois
   const [showPanels, setShowPanels] = useState(true)
   const [showFlux, setShowFlux] = useState(true)
+
+  // Animations pilotées par le tutoriel (surface qui grimpe, défilement des mois).
+  const surfaceStateRef = useRef(0)
+  surfaceStateRef.current = surface
+  const tweenRef = useRef(null)
+  const monthTweenRef = useRef(null)
+  useEffect(() => () => {
+    clearInterval(tweenRef.current)
+    clearInterval(monthTweenRef.current)
+  }, [])
+
+  useImperativeHandle(ref, () => ({
+    // Fait grimper la surface jusqu'au max puis revient → les panneaux se multiplient.
+    animateSurface() {
+      const max = baseMetrics?.roofAreaM2
+      if (!max) return
+      const base = Math.round(surfaceStateRef.current || max * 0.25)
+      const seq = []
+      const up = 26
+      const hold = 8
+      const down = 26
+      for (let i = 1; i <= up; i++) seq.push(Math.round(base + (max - base) * (i / up)))
+      for (let i = 0; i < hold; i++) seq.push(Math.round(max))
+      for (let i = 1; i <= down; i++) seq.push(Math.round(max + (base - max) * (i / down)))
+      let k = 0
+      clearInterval(tweenRef.current)
+      // ~110 ms par palier → montée et descente bien plus douces (~6,6 s au total).
+      tweenRef.current = setInterval(() => {
+        if (k >= seq.length) {
+          clearInterval(tweenRef.current)
+          return
+        }
+        setSurface(seq[k])
+        k += 1
+      }, 110)
+    },
+    // Prépare l'étape « mois » : affiche le flux et positionne un mois pour que
+    // l'utilisateur puisse jouer avec le curseur (pas d'auto-défilement).
+    focusMonths() {
+      setShowFlux(true)
+      setMonthIndex((m) => (m == null ? 5 : m))
+    },
+  }), [baseMetrics])
 
   // Dès que les données réelles arrivent : facture estimée + surface dimensionnée
   // pour couvrir ~la consommation (réaliste), bornée par la surface max du toit.
@@ -108,8 +151,8 @@ export default function RoofAnalysis({ selected, baseMetrics, loading, error, on
       {/* Carte + visualisation */}
       <section data-tour="map" className="relative w-full lg:w-[60%] h-72 lg:h-full bg-surface-container-high border-b lg:border-b-0 lg:border-r border-outline-variant">
         <Map
-          lat={selected.lat}
-          lng={selected.lng}
+          lat={baseMetrics?.center?.latitude ?? selected.lat}
+          lng={baseMetrics?.center?.longitude ?? selected.lng}
           address={selected.address}
           zoom={20}
           panels={panelsToDraw}
@@ -153,7 +196,7 @@ export default function RoofAnalysis({ selected, baseMetrics, loading, error, on
 
         {/* Curseur mensuel */}
         {showFlux && fluxData && (
-          <div className="absolute bottom-4 left-1/2 -translate-x-1/2 w-[min(90%,360px)] bg-surface/95 backdrop-blur rounded-full px-4 py-2 z-10 shadow-sm flex items-center gap-3">
+          <div data-tour="months" className="absolute bottom-4 left-1/2 -translate-x-1/2 w-[min(90%,360px)] bg-surface/95 backdrop-blur rounded-full px-4 py-2 z-10 shadow-sm flex items-center gap-3">
             <button
               type="button"
               onClick={() => setMonthIndex(null)}
@@ -369,7 +412,9 @@ export default function RoofAnalysis({ selected, baseMetrics, loading, error, on
       </section>
     </div>
   )
-}
+})
+
+export default RoofAnalysis
 
 function MapToggle({ active, onClick, icon, label, loading, disabled }) {
   return (

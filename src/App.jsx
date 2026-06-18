@@ -1,4 +1,4 @@
-import { useState, useEffect, useRef } from 'react'
+import { useState, useEffect, useRef, useMemo } from 'react'
 import SearchBar from './components/SearchBar.jsx'
 import Map from './components/Map.jsx'
 import SolarCard, { SolarCardSkeleton, SavingsBreakdown, CostBreakdown } from './components/SolarCard.jsx'
@@ -44,51 +44,67 @@ const EXAMPLE_PLACE = {
   countryCode: 'FR',
 }
 
-// Étapes du tutoriel guidé (sur la page Analyse), déclenché après la démo « Voir un exemple ».
-const ANALYSE_TOUR_STEPS = [
-  {
-    target: 'map',
-    title: 'Votre toit, vu du ciel 🛰️',
-    text: "La couche colorée, c'est l'ensoleillement de votre toiture calculé par Google ; les rectangles bleus sont les panneaux placés automatiquement. En bas, affichez le flux mois par mois.",
-  },
-  {
-    target: 'surface',
-    title: 'Surface exploitable',
-    text: 'La surface détectée sur votre toit. Le système est pré-dimensionné pour couvrir votre consommation — ajustez librement.',
-  },
-  {
-    target: 'tilt',
-    title: 'Inclinaison du toit',
-    text: "L'angle de la toiture influe sur la production ; ~30° est l'optimum sous nos latitudes.",
-  },
-  {
-    target: 'orientation',
-    title: 'Orientation',
-    text: 'Plein sud = production maximale. Est / Ouest produisent un peu moins.',
-  },
-  {
-    target: 'bill',
-    title: 'Votre facture',
-    text: "Indiquez votre facture mensuelle : on en déduit votre consommation annuelle pour des économies réalistes.",
-  },
-  {
-    target: 'battery',
-    title: 'Avec ou sans batterie ?',
-    text: "Une batterie augmente la part d'énergie consommée chez vous, au lieu de la revendre moins cher au réseau.",
-  },
-  {
-    target: 'estimate',
-    title: 'Estimation en direct',
-    text: 'Capacité, panneaux, production et économies se recalculent instantanément à chaque réglage.',
-  },
-  {
-    target: 'compute',
-    title: 'Place au tableau de bord 🚀',
-    text: 'Cliquez pour le détail complet : économies, coût net, rentabilité sur 25 ans et impact CO₂.',
-    finishLabel: 'Voir mes économies',
-    clickOnFinish: true,
-  },
-]
+// Étapes du tutoriel guidé (page Analyse), déclenché après la démo « Voir un exemple ».
+// `roofRef` permet aux étapes interactives de piloter les animations de la carte.
+function buildTourSteps(roofRef) {
+  return [
+    {
+      target: 'map',
+      title: 'Votre toit, vu du ciel 🛰️',
+      text: "La couche colorée, c'est l'ensoleillement de votre toiture calculé par Google ; les rectangles bleus sont les panneaux placés automatiquement.",
+    },
+    {
+      target: 'surface',
+      title: 'Surface exploitable',
+      text: 'La surface détectée sur votre toit. Le système est pré-dimensionné pour couvrir votre consommation — ajustez librement.',
+    },
+    {
+      target: 'map',
+      title: 'Plus de surface, plus de panneaux ☀️',
+      text: "Regardez : quand la surface augmente, les panneaux se multiplient sur votre toit jusqu'au maximum exploitable.",
+      onEnter: () => roofRef.current?.animateSurface(),
+    },
+    {
+      target: 'months',
+      title: 'À toi de jouer 🎚️',
+      text: "Glisse le curseur pour voir l'ensoleillement de ton toit mois par mois — sombre en hiver, éclatant en été. Reviens sur « Année » pour le bilan annuel.",
+      interactive: true,
+      onEnter: () => roofRef.current?.focusMonths(),
+    },
+    {
+      target: 'tilt',
+      title: 'Inclinaison du toit',
+      text: "L'angle de la toiture influe sur la production ; ~30° est l'optimum sous nos latitudes.",
+    },
+    {
+      target: 'orientation',
+      title: 'Orientation',
+      text: 'Plein sud = production maximale. Est / Ouest produisent un peu moins.',
+    },
+    {
+      target: 'bill',
+      title: 'Votre facture',
+      text: 'Indiquez votre facture mensuelle : on en déduit votre consommation annuelle pour des économies réalistes.',
+    },
+    {
+      target: 'battery',
+      title: 'Avec ou sans batterie ?',
+      text: "Une batterie augmente la part d'énergie consommée chez vous (activée par défaut), au lieu de revendre le surplus moins cher.",
+    },
+    {
+      target: 'estimate',
+      title: 'Estimation en direct',
+      text: 'Capacité, panneaux, production et économies se recalculent instantanément à chaque réglage.',
+    },
+    {
+      target: 'compute',
+      title: 'Place au tableau de bord 🚀',
+      text: 'Cliquez pour le détail complet : économies, coût net, rentabilité sur 25 ans et impact CO₂.',
+      finishLabel: 'Voir mes économies',
+      clickOnFinish: true,
+    },
+  ]
+}
 
 export default function App() {
   const [selected, setSelected] = useState(null) // { address, lat, lng, countryCode }
@@ -166,6 +182,8 @@ export default function App() {
   // Démo guidée : on fait « taper » l'adresse d'exemple dans la barre du hero, puis
   // elle simule le clic sur Calculer. Repli direct si la barre n'est pas dispo.
   const heroSearchRef = useRef(null)
+  const roofRef = useRef(null)
+  const tourSteps = useMemo(() => buildTourSteps(roofRef), [])
   const [tour, setTour] = useState(false)
   const [pendingTour, setPendingTour] = useState(false)
   function runExample() {
@@ -196,7 +214,7 @@ export default function App() {
   return (
     <div className="min-h-screen flex flex-col">
       {splash && <Splash />}
-      {tour && <Tour steps={ANALYSE_TOUR_STEPS} onClose={() => setTour(false)} />}
+      {tour && <Tour steps={tourSteps} onClose={() => setTour(false)} />}
       <Header
         view={view}
         hasSelection={selected != null}
@@ -223,6 +241,7 @@ export default function App() {
         {view === 'analyse' &&
           (selected ? (
             <RoofAnalysis
+              ref={roofRef}
               selected={selected}
               baseMetrics={baseMetrics}
               loading={loadingSolar}
@@ -626,8 +645,8 @@ function Results({ selected, metrics, loadingSolar, solarError, onAdjust, onSeeC
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-gutter">
         <div className="lg:col-span-1 rounded-xl overflow-hidden card-shadow border border-outline-variant/30 min-h-[320px]">
           <Map
-            lat={selected.lat}
-            lng={selected.lng}
+            lat={metrics?.center?.latitude ?? selected.lat}
+            lng={metrics?.center?.longitude ?? selected.lng}
             address={selected.address}
             zoom={20}
             panels={metrics ? metrics.solarPanels?.slice(0, metrics.panelsCount) : null}
