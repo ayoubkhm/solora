@@ -15,6 +15,7 @@ export default function Map({
   showPanels = false,
   flux = null,          // { dataUrl, bounds }
   showFlux = false,
+  onViewChange = null,  // ({ lat, lng, radius }) émis à l'arrêt d'un déplacement/zoom
 }) {
   const containerRef = useRef(null)
   const mapsRef = useRef(null)
@@ -22,6 +23,8 @@ export default function Map({
   const markerRef = useRef(null)
   const polygonsRef = useRef([])
   const overlayRef = useRef(null)
+  const onViewChangeRef = useRef(onViewChange)
+  onViewChangeRef.current = onViewChange
   const [ready, setReady] = useState(false)
 
   // Init carte + marqueur.
@@ -43,6 +46,21 @@ export default function Map({
             gestureHandling: 'cooperative',
           })
           markerRef.current = new maps.Marker({ position, map: mapRef.current, title: address })
+          // À l'arrêt d'un déplacement/zoom : signale la zone visible (centre + rayon en mètres).
+          mapRef.current.addListener('idle', () => {
+            const cb = onViewChangeRef.current
+            if (!cb) return
+            const map = mapRef.current
+            const c = map.getCenter()
+            const b = map.getBounds()
+            let radius = 60
+            try {
+              if (b && maps.geometry) {
+                radius = maps.geometry.spherical.computeDistanceBetween(c, b.getNorthEast())
+              }
+            } catch { /* géométrie indisponible : rayon par défaut */ }
+            cb({ lat: c.lat(), lng: c.lng(), radius })
+          })
         } else {
           mapRef.current.setCenter(position)
           mapRef.current.setZoom(zoom)

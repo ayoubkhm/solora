@@ -104,16 +104,16 @@ function renderBand(band, width, height, mask, min, max) {
 }
 
 // Récupère le flux mensuel + masque et produit : l'overlay annuel + 12 overlays mensuels.
-export async function getFluxOverlays(lat, lng, radiusMeters = 50) {
+export async function getFluxOverlays(lat, lng, radiusMeters = 50, pixelSizeMeters = 0.5) {
   if (!GOOGLE_API_KEY) throw new Error('NO_API_KEY')
 
   const params = new URLSearchParams({
     'location.latitude': lat,
     'location.longitude': lng,
-    radiusMeters: String(radiusMeters),
+    radiusMeters: String(Math.round(radiusMeters)),
     view: 'IMAGERY_AND_ALL_FLUX_LAYERS',
     requiredQuality: 'LOW',
-    pixelSizeMeters: '0.5',
+    pixelSizeMeters: String(pixelSizeMeters),
     key: GOOGLE_API_KEY,
   })
 

@@ -1,4 +1,4 @@
-import { forwardRef, useEffect, useImperativeHandle, useMemo, useRef, useState } from 'react'
+import { forwardRef, useCallback, useEffect, useImperativeHandle, useMemo, useRef, useState } from 'react'
 import Map from './Map.jsx'
 import { adjustMetrics } from '../services/solarApi.js'
 import { formatNumber, subsidyLink } from '../services/geoUtils.js'
@@ -37,6 +37,7 @@ const RoofAnalysis = forwardRef(function RoofAnalysis({ selected, baseMetrics, l
   // Visualisation carte.
   const [fluxData, setFluxData] = useState(null) // { bounds, annual, months[], monthRange }
   const [fluxLoading, setFluxLoading] = useState(false)
+  const [fluxView, setFluxView] = useState(null) // { lat, lng, radius } = zone à couvrir
   const [monthIndex, setMonthIndex] = useState(null) // null = vue annuelle ; 0-11 = mois
   const [showPanels, setShowPanels] = useState(true)
   const [showFlux, setShowFlux] = useState(true)
@@ -49,6 +50,7 @@ const RoofAnalysis = forwardRef(function RoofAnalysis({ selected, baseMetrics, l
   useEffect(() => () => {
     clearInterval(tweenRef.current)
     clearInterval(monthTweenRef.current)
+    clearTimeout(viewTimerRef.current)
   }, [])
 
   useImperativeHandle(ref, () => ({
@@ -104,22 +106,62 @@ const RoofAnalysis = forwardRef(function RoofAnalysis({ selected, baseMetrics, l
     setSurface(Math.min(Math.round(targetPanels * areaPerPanel), baseMetrics.roofAreaM2))
   }, [baseMetrics])
 
-  // Récupère les heatmaps de flux solaire (annuel + 12 mois) pour cette adresse.
+  // Anti-rebond + seuil : on ne recharge le flux que quand la zone visible change
+  // vraiment (déplacement notable ou zoom sensible), pour limiter coût et latence.
+  const viewTimerRef = useRef(null)
+  const fluxViewRef = useRef(null)
+  fluxViewRef.current = fluxView
+  const showFluxRef = useRef(showFlux)
+  showFluxRef.current = showFlux
+
+  const handleViewChange = useCallback((v) => {
+    // Rayon plafonné (45–150 m) : couvre le visible sans produire un raster trop lourd.
+    const radius = Math.max(45, Math.min(150, Math.round(v.radius)))
+    const cand = { lat: v.lat, lng: v.lng, radius }
+    clearTimeout(viewTimerRef.current)
+    viewTimerRef.current = setTimeout(() => {
+      const cur = fluxViewRef.current
+      if (!cur) {
+        setFluxView(cand) // premier chargement : on dimensionne au visible
+        return
+      }
+      if (!showFluxRef.current) return // heatmap masquée : pas d'appel facturé inutile
+      const dLat = (cand.lat - cur.lat) * 111000
+      const dLng = (cand.lng - cur.lng) * 111000 * Math.cos((cand.lat * Math.PI) / 180)
+      const moved = Math.hypot(dLat, dLng)
+      const radChange = Math.abs(cand.radius - cur.radius) / cur.radius
+      if (moved > cur.radius * 0.4 || radChange > 0.3) setFluxView(cand)
+    }, 800)
+  }, [])
+
+  // Nouvelle adresse : on repart de zéro (le 1er « idle » de la carte fixera la zone).
   useEffect(() => {
-    let cancelled = false
+    clearTimeout(viewTimerRef.current)
     setFluxData(null)
     setMonthIndex(null)
+    setFluxView(null)
+    fluxViewRef.current = null
+    setFluxLoading(true) // indicateur central dès l'arrivée sur l'adresse
+  }, [selected.lat, selected.lng])
+
+  // Récupère les heatmaps de flux solaire (annuel + 12 mois) pour la zone visible.
+  // On NE vide PAS l'overlay courant pendant un rechargement : il reste affiché
+  // jusqu'à l'arrivée du nouveau (pas de clignotement à chaque déplacement).
+  useEffect(() => {
+    if (!fluxView) return
+    let cancelled = false
     setFluxLoading(true)
+    const pixel = fluxView.radius > 80 ? 1 : 0.5 // raster plus léger quand on dézoome
     // Import dynamique : geotiff/proj4 ne sont chargés que sur la page Analyse.
     import('../services/dataLayersApi.js')
-      .then(({ getFluxOverlays }) => getFluxOverlays(selected.lat, selected.lng))
+      .then(({ getFluxOverlays }) => getFluxOverlays(fluxView.lat, fluxView.lng, fluxView.radius, pixel))
       .then((f) => !cancelled && setFluxData(f))
-      .catch(() => !cancelled && setFluxData(null))
+      .catch(() => {}) // échec : on conserve l'overlay précédent
       .finally(() => !cancelled && setFluxLoading(false))
     return () => {
       cancelled = true
     }
-  }, [selected.lat, selected.lng])
+  }, [fluxView])
 
   // Overlay actif (annuel ou mois sélectionné), mémoïsé pour éviter de recréer l'overlay à chaque frappe.
   const activeFlux = useMemo(() => {
@@ -161,7 +203,18 @@ const RoofAnalysis = forwardRef(function RoofAnalysis({ selected, baseMetrics, l
           showPanels={showPanels}
           flux={activeFlux}
           showFlux={showFlux}
+          onViewChange={handleViewChange}
         />
+
+        {/* Mise à jour du flux après un déplacement/zoom (overlay précédent conservé) */}
+        {fluxLoading && fluxData && (
+          <div className="absolute top-4 left-1/2 -translate-x-1/2 z-10 pointer-events-none">
+            <div className="flex items-center gap-2 bg-surface/90 backdrop-blur px-4 py-2 rounded-full shadow-md border border-outline-variant/40">
+              <span className="material-symbols-outlined text-primary animate-spin text-[18px]">progress_activity</span>
+              <span className="font-label-sm text-label-sm text-on-surface">Mise à jour de l'ensoleillement…</span>
+            </div>
+          </div>
+        )}
 
         {/* Indicateur central pendant le chargement de l'ensoleillement (GeoTIFF) */}
         {fluxLoading && !fluxData && (
