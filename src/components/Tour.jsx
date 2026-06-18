@@ -1,10 +1,12 @@
-import { useCallback, useEffect, useState } from 'react'
+import { useCallback, useEffect, useLayoutEffect, useRef, useState } from 'react'
 
 // Tutoriel guidé (coach marks) : assombrit la page sauf la/les zone(s) ciblée(s),
 // avec une bulle explicative. Navigation Précédent / Suivant / Passer.
 export default function Tour({ steps, onClose }) {
   const [i, setI] = useState(0)
   const [rects, setRects] = useState({ primary: null, extra: [] })
+  const bubbleRef = useRef(null)
+  const [bubbleH, setBubbleH] = useState(210) // hauteur réelle mesurée (placement fiable)
   const step = steps[i]
   const isLast = i === steps.length - 1
 
@@ -40,6 +42,12 @@ export default function Tour({ steps, onClose }) {
     steps[i]?.onEnter?.()
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [i])
+
+  // Mesure la hauteur réelle de la bulle → placement fiable (au-dessus/au-dessous)
+  // même quand le texte est long ou l'écran court.
+  useLayoutEffect(() => {
+    if (bubbleRef.current) setBubbleH(bubbleRef.current.offsetHeight)
+  }, [i, rects])
 
   const next = useCallback(() => {
     if (isLast) {
@@ -91,7 +99,9 @@ export default function Tour({ steps, onClose }) {
 
   // Position de la bulle (basée sur la cible principale), sans recouvrir la cible.
   const W = 340
-  const BH = 210
+  // Hauteur disponible bornée au viewport (sous le header) : la bulle ne déborde jamais.
+  const maxBH = vh - headerH - 24
+  const BH = Math.min(bubbleH, maxBH)
   let bubble = { top: '50%', left: '50%', transform: 'translate(-50%,-50%)', width: W }
   if (primary) {
     const m = 14
@@ -151,8 +161,9 @@ export default function Tour({ steps, onClose }) {
 
       {/* Bulle explicative */}
       <div
-        className="absolute bg-surface rounded-2xl p-5 card-shadow-lifted border border-outline-variant/40 flex flex-col gap-3 pointer-events-auto"
-        style={bubble}
+        ref={bubbleRef}
+        className="absolute bg-surface rounded-2xl p-5 card-shadow-lifted border border-outline-variant/40 flex flex-col gap-3 pointer-events-auto overflow-y-auto"
+        style={{ ...bubble, maxHeight: maxBH }}
       >
         <div className="flex items-center justify-between">
           <span className="font-label-sm text-label-sm text-on-surface-variant uppercase tracking-wider">

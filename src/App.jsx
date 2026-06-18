@@ -435,7 +435,7 @@ function Landing({ onSelect, onError, globalError, onExample, searchRef }) {
     <>
       <section
         id="recherche"
-        className="relative w-full min-h-[calc(100vh-80px)] flex items-center justify-center px-margin-mobile md:px-margin-desktop py-16 bg-surface-container-highest overflow-hidden"
+        className="relative w-full min-h-[calc(100vh-80px)] flex items-center justify-center px-margin-mobile md:px-margin-desktop py-10 lg:py-16 bg-surface-container-highest overflow-hidden"
       >
         {/* Vidéo de fond plein écran (autoplay, muette, en boucle) ; image en poster de secours */}
         <video
@@ -452,9 +452,9 @@ function Landing({ onSelect, onError, globalError, onExample, searchRef }) {
         {/* Dégradé pour garder le texte lisible par-dessus la vidéo */}
         <div className="absolute inset-0 bg-gradient-to-b from-background/90 via-background/80 to-background/92" />
 
-        <div className="relative z-10 max-w-4xl mx-auto text-center flex flex-col items-center gap-8 animate-fade-up">
-          <div className="space-y-5">
-            <h1 className="font-headline-xl font-bold tracking-tight text-on-surface text-[clamp(36px,8vw,44px)] md:text-[clamp(52px,6vw,76px)] leading-[1.05]">
+        <div className="relative z-10 max-w-4xl mx-auto text-center flex flex-col items-center gap-5 lg:gap-8 animate-fade-up">
+          <div className="space-y-4">
+            <h1 className="font-headline-xl font-bold tracking-tight text-on-surface text-[clamp(34px,7vw,42px)] md:text-[clamp(44px,5vw,60px)] leading-[1.05]">
               Le futur de votre énergie<br className="hidden sm:block" /> commence sur votre toit.
             </h1>
             <p className="font-body-lg text-body-lg text-on-surface-variant max-w-2xl mx-auto">
@@ -534,7 +534,7 @@ function DemoHint({ onExample }) {
   const [open, setOpen] = useState(true)
   if (!open) return null
   return (
-    <div className="hidden xl:block absolute right-6 2xl:right-10 bottom-24 z-20 w-72 animate-slide-in-right">
+    <div className="hidden 2xl:block absolute right-10 bottom-12 z-20 w-72 animate-slide-in-right">
       <div className="relative bg-surface/95 backdrop-blur rounded-2xl p-5 card-shadow-lifted border border-outline-variant/40 flex flex-col gap-3">
         <button
           type="button"
