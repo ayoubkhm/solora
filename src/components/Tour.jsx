@@ -4,7 +4,7 @@ import { useCallback, useEffect, useLayoutEffect, useRef, useState } from 'react
 // avec une bulle explicative. Navigation Précédent / Suivant / Passer.
 export default function Tour({ steps, onClose }) {
   const [i, setI] = useState(0)
-  const [rects, setRects] = useState({ primary: null, extra: [] })
+  const [rects, setRects] = useState({ primary: null, extra: [], map: null })
   const bubbleRef = useRef(null)
   const [bubbleH, setBubbleH] = useState(210) // hauteur réelle mesurée (placement fiable)
   const step = steps[i]
@@ -21,7 +21,9 @@ export default function Tour({ steps, onClose }) {
       .map((t) => document.querySelector(`[data-tour="${t}"]`))
       .filter(Boolean)
       .map(rectOf)
-    setRects({ primary: el ? rectOf(el) : null, extra })
+    // La carte est l'élément visuel clé : on la mesure pour ne jamais la recouvrir.
+    const mapEl = document.querySelector('[data-tour="map"]')
+    setRects({ primary: el ? rectOf(el) : null, extra, map: mapEl ? rectOf(mapEl) : null })
   }, [step])
 
   useEffect(() => {
@@ -97,7 +99,9 @@ export default function Tour({ steps, onClose }) {
   const interactive = step.interactive && primary
   const ringSpot = primary ? bleed(primary) : null
 
-  // Position de la bulle (basée sur la cible principale), sans recouvrir la cible.
+  // Position de la bulle : on évite de recouvrir la cible principale ET les zones
+  // surlignées en plus (`extra`). On teste plusieurs ancrages et on garde le premier
+  // qui tient à l'écran sans chevaucher aucune zone mise en avant.
   const W = 340
   // Hauteur disponible bornée au viewport (sous le header) : la bulle ne déborde jamais.
   const maxBH = vh - headerH - 24
@@ -105,23 +109,41 @@ export default function Tour({ steps, onClose }) {
   let bubble = { top: '50%', left: '50%', transform: 'translate(-50%,-50%)', width: W }
   if (primary) {
     const m = 14
+    // Zones à ne jamais recouvrir : la cible, les surbrillances « extra », et la carte
+    // (élément visuel clé — la bulle doit la laisser visible).
+    const mapSpot = rects.map ? spotOf(rects.map) : null
+    const obstacles = [primary, ...rects.extra.map(spotOf), mapSpot].filter(Boolean)
     const clampX = (x) => Math.max(m, Math.min(x, vw - W - m))
     const clampY = (y) => Math.max(m, Math.min(y, vh - BH - m))
-    const spaceBelow = vh - (primary.top + primary.height)
-    const spaceAbove = primary.top
-    const spaceRight = vw - (primary.left + primary.width)
-    const spaceLeft = primary.left
-    if (spaceBelow >= BH + m) {
-      bubble = { top: primary.top + primary.height + m, left: clampX(primary.left + primary.width / 2 - W / 2), width: W }
-    } else if (spaceAbove >= BH + m) {
-      bubble = { bottom: vh - primary.top + m, left: clampX(primary.left + primary.width / 2 - W / 2), width: W }
-    } else if (spaceRight >= W + m) {
-      bubble = { top: clampY(primary.top + primary.height / 2 - BH / 2), left: primary.left + primary.width + m, width: W }
-    } else if (spaceLeft >= W + m) {
-      bubble = { top: clampY(primary.top + primary.height / 2 - BH / 2), left: primary.left - m - W, width: W }
-    } else {
-      bubble = { top: clampY(primary.top + primary.height / 2 - BH / 2), left: clampX(primary.left + primary.width / 2 - W / 2), width: W }
+    const fits = (c) => c.left >= m && c.left + W <= vw - m && c.top >= headerH && c.top + BH <= vh - m
+    const overlaps = (c) =>
+      obstacles.some(
+        (o) => c.left < o.left + o.width && c.left + W > o.left && c.top < o.top + o.height && c.top + BH > o.top
+      )
+    // Génère les ancrages autour d'une zone (dessous, dessus, droite/gauche × haut/centre/bas).
+    const around = (s) => {
+      const cx = clampX(s.left + s.width / 2 - W / 2)
+      const rightX = s.left + s.width + m
+      const leftX = s.left - m - W
+      return [
+        { top: s.top + s.height + m, left: cx }, // dessous
+        { top: s.top - m - BH, left: cx }, // dessus
+        { top: clampY(s.top + s.height / 2 - BH / 2), left: rightX }, // droite, centré
+        { top: clampY(s.top + s.height - BH), left: rightX }, // droite, bas
+        { top: clampY(s.top), left: rightX }, // droite, haut
+        { top: clampY(s.top + s.height / 2 - BH / 2), left: leftX }, // gauche, centré
+        { top: clampY(s.top + s.height - BH), left: leftX }, // gauche, bas
+        { top: clampY(s.top), left: leftX }, // gauche, haut
+      ]
     }
+    // On essaie d'abord autour de la cible ; si elle est posée sur la carte, on
+    // bascule autour de la carte pour atterrir dans le panneau de droite.
+    const candidates = [...around(primary), ...(mapSpot ? around(mapSpot) : [])]
+    // 1) idéal : tient à l'écran sans rien recouvrir.
+    let chosen = candidates.find((c) => fits(c) && !overlaps(c))
+    // 2) sinon : au moins tient à l'écran (quitte à chevaucher).
+    if (!chosen) chosen = candidates.find(fits)
+    if (chosen) bubble = { top: chosen.top, left: chosen.left, width: W }
   }
 
   return (

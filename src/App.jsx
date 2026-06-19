@@ -468,7 +468,7 @@ function Landing({ onSelect, onError, globalError, onExample, searchRef }) {
           <button
             type="button"
             onClick={onExample}
-            className="flex items-center gap-2 px-4 py-2 rounded-full bg-surface/80 backdrop-blur border border-outline-variant/40 text-on-surface font-label-md text-label-md hover:bg-surface transition-colors -mt-2"
+            className="xl:hidden flex items-center gap-2 px-4 py-2 rounded-full bg-surface/80 backdrop-blur border border-outline-variant/40 text-on-surface font-label-md text-label-md hover:bg-surface transition-colors -mt-2"
           >
             <span className="material-symbols-outlined text-[18px] text-primary" style={{ fontVariationSettings: "'FILL' 1" }}>
               play_circle
@@ -534,27 +534,36 @@ function DemoHint({ onExample }) {
   const [open, setOpen] = useState(true)
   if (!open) return null
   return (
-    <div className="hidden 2xl:block absolute right-10 bottom-12 z-20 w-72 animate-slide-in-right">
-      <div className="relative bg-surface/95 backdrop-blur rounded-2xl p-5 card-shadow-lifted border border-outline-variant/40 flex flex-col gap-3">
+    <div className="hidden xl:block absolute right-5 bottom-6 z-20 w-[16.5rem] animate-slide-in-right">
+      {/* Halo pulsé pour attirer l'œil du jury */}
+      <div className="absolute -inset-2 rounded-3xl bg-primary/20 blur-xl animate-demo-glow pointer-events-none" />
+
+      <div className="relative bg-surface/95 backdrop-blur rounded-2xl p-4 card-shadow-lifted border-2 border-primary/40 flex flex-col gap-2.5 overflow-hidden">
+        {/* Liseré supérieur accentué */}
+        <div className="absolute inset-x-0 top-0 h-1 bg-gradient-to-r from-primary via-secondary to-primary" />
+
         <button
           type="button"
           onClick={() => setOpen(false)}
           aria-label="Fermer"
-          className="absolute top-3 right-3 text-on-surface-variant hover:text-on-surface"
+          className="absolute top-2.5 right-2.5 text-on-surface-variant hover:text-on-surface"
         >
-          <span className="material-symbols-outlined text-[18px]">close</span>
+          <span className="material-symbols-outlined text-[16px]">close</span>
         </button>
 
-        <span className="inline-flex items-center gap-1.5 self-start bg-secondary-container text-on-secondary-container font-label-sm text-label-sm px-2.5 py-1 rounded-full">
-          <span className="material-symbols-outlined text-[14px]" style={{ fontVariationSettings: "'FILL' 1" }}>auto_awesome</span>
-          Démo en 1 clic
+        <span className="inline-flex items-center gap-1.5 self-start bg-primary text-on-primary font-label-sm text-label-sm px-2.5 py-1 rounded-full shadow-sm">
+          <span className="relative flex h-1.5 w-1.5">
+            <span className="absolute inline-flex h-full w-full rounded-full bg-on-primary opacity-75 animate-ping" />
+            <span className="relative inline-flex h-1.5 w-1.5 rounded-full bg-on-primary" />
+          </span>
+          Spécial jury
         </span>
 
-        <h3 className="font-headline-md text-headline-md text-on-surface leading-tight pr-4">
-          Pas d'adresse sous la main ?
+        <h3 className="font-label-md text-[16px] font-bold leading-snug text-on-surface pr-5">
+          Membre du jury ? Lancez la démo en 1 clic. 👋
         </h3>
         <p className="font-body-sm text-body-sm text-on-surface-variant">
-          Lancez une démo guidée sur un vrai toit et découvrez Solora en action : analyse, économies et contexte européen.
+          Pas d'adresse à saisir : on déroule une analyse guidée sur un vrai toit, de A à Z.
         </p>
 
         <button
@@ -563,11 +572,14 @@ function DemoHint({ onExample }) {
             setOpen(false)
             onExample()
           }}
-          className="mt-1 bg-primary-container text-on-primary-fixed font-label-md text-label-md px-4 py-2.5 rounded-xl hover:brightness-95 transition flex items-center justify-center gap-2"
+          className="mt-0.5 bg-primary text-on-primary font-label-md text-label-md px-4 py-2.5 rounded-xl hover:brightness-95 transition flex items-center justify-center gap-2 shadow-md"
         >
           <span className="material-symbols-outlined text-[18px]" style={{ fontVariationSettings: "'FILL' 1" }}>play_circle</span>
-          Voir un exemple
+          Voir la démo guidée
         </button>
+        <p className="text-center font-label-sm text-label-sm text-on-surface-variant">
+          ~30 s · données réelles
+        </p>
       </div>
     </div>
   )

@@ -104,6 +104,18 @@
   .animate-slide-in-right { animation: none; }
 }
 
+/* Halo pulsé de la carte jury : respire doucement pour attirer le regard. */
+@keyframes demoGlow {
+  0%, 100% { opacity: 0.35; transform: scale(0.98); }
+  50% { opacity: 0.7; transform: scale(1.03); }
+}
+.animate-demo-glow {
+  animation: demoGlow 2.8s ease-in-out 3.1s infinite both;
+}
+@media (prefers-reduced-motion: reduce) {
+  .animate-demo-glow { animation: none; opacity: 0.4; }
+}
+
 /* Entrée en matière : apparition en fondu + léger glissement du contenu du hero. */
 @keyframes fadeUp {
   from { opacity: 0; transform: translateY(16px); }
